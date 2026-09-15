@@ -1,0 +1,1182 @@
+{
+  "meta": {
+    "version": "1.0",
+    "generated": "2026-09-11",
+    "entry_count": 59,
+    "description": "Regulatory dataset for the applicability engine. Each entry's `trigger` is evaluated against user answers to assign a tier.",
+    "tiers": {
+      "baseline": "Applies to essentially every business — surface always.",
+      "applies": "Definite match based on answers — in scope now.",
+      "pending": "In scope but obligations not yet effective (future date).",
+      "verify": "Probable match — flag for professional review, do not assert certainty.",
+      "watch": "Not yet applicable; monitor for passage or effective date.",
+      "recommend": "Voluntary framework — recommended given the profile."
+    },
+    "trigger_grammar": {
+      "any": "list of {q, in} conditions — TRUE if ANY match",
+      "all": "list of conditions — TRUE only if ALL match",
+      "not": "negates a nested condition",
+      "q": "question id from questions.json",
+      "in": "list of answer ids; TRUE if user's answer(s) intersect this list",
+      "always": "true — baseline entry, no conditions",
+      "tier_if": "overrides default tier when a condition holds (e.g. pending until effective date)"
+    }
+  },
+  "laws": [
+    {
+      "id": "HIPAA",
+      "name": "Health Insurance Portability & Accountability Act",
+      "cat": "federal",
+      "type": "both",
+      "year": "1996",
+      "pri": "critical",
+      "scope": "Healthcare providers, health plans, clearinghouses, and all business associates.",
+      "smb": "Required for any healthcare SMB or any vendor touching protected health information.",
+      "trigger": {
+        "any": [
+          {
+            "q": "sector",
+            "in": [
+              "healthcare"
+            ]
+          },
+          {
+            "q": "data_types",
+            "in": [
+              "health_phi"
+            ]
+          }
+        ]
+      },
+      "ai": [
+        "Any AI tool processing PHI requires a signed Business Associate Agreement (BAA).",
+        "Training AI on patient data requires de-identification (Safe Harbor or Expert Determination).",
+        "AI diagnostic tools may qualify as FDA-regulated medical devices — dual compliance.",
+        "Automated clinical decisions must comply with the minimum necessary standard."
+      ],
+      "enf": "HHS/OCR — up to $1.93M per year per violation category.",
+      "act": "Get a signed Business Associate Agreement (BAA) from every AI vendor that touches PHI before you use their tool.",
+      "source": "https://www.hhs.gov/hipaa/index.html"
+    },
+    {
+      "id": "GLBA",
+      "name": "Gramm-Leach-Bliley Act",
+      "cat": "federal",
+      "type": "both",
+      "year": "1999 / 2023",
+      "pri": "critical",
+      "scope": "Banks, mortgage companies, insurers, tax preparers, and financial advisors.",
+      "smb": "Required for any financial services SMB.",
+      "trigger": {
+        "q": "sector",
+        "in": [
+          "finance"
+        ]
+      },
+      "ai": [
+        "2023 Safeguards Rule update puts AI systems processing customer financial data in scope.",
+        "Written security programs must explicitly address AI-related risks to nonpublic personal information.",
+        "Service provider oversight provisions apply to all AI vendors with access to customer data.",
+        "Automated underwriting and credit decision tools must comply with data use and sharing restrictions."
+      ],
+      "enf": "FTC — up to $100K per violation; officers personally liable up to $10K.",
+      "act": "Make sure your GLBA Safeguards Rule risk assessment explicitly covers the AI systems that touch customer financial data.",
+      "source": "https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act"
+    },
+    {
+      "id": "COPPA",
+      "name": "Children's Online Privacy Protection Act",
+      "cat": "federal",
+      "type": "privacy",
+      "year": "1998",
+      "pri": "important",
+      "scope": "Services directed at children under 13, or knowingly collecting data from children.",
+      "smb": "Relevant for EdTech, gaming, parenting, or entertainment SMBs.",
+      "trigger": {
+        "q": "data_types",
+        "in": [
+          "children"
+        ]
+      },
+      "ai": [
+        "AI recommendation and personalization on children's platforms face strict parental consent rules.",
+        "AI behavioral profiling of children for targeting is heavily restricted.",
+        "FTC's 2024 enforcement increasingly targets AI-driven data collection and personalization.",
+        "Proposed COPPA 2.0 would extend protections to age 16 — monitor Congressional progress."
+      ],
+      "enf": "FTC — up to $51,744 per violation.",
+      "act": "Run an age-verification and parental-consent review on any AI product you offer to consumers.",
+      "source": "https://www.ftc.gov/legal-library/browse/rules/childrens-online-privacy-protection-rule-coppa"
+    },
+    {
+      "id": "FERPA",
+      "name": "Family Educational Rights and Privacy Act",
+      "cat": "federal",
+      "type": "privacy",
+      "year": "1974",
+      "pri": "important",
+      "scope": "Educational institutions receiving federal funding — student education records.",
+      "smb": "Relevant for EdTech SMBs or districts deploying third-party AI tools.",
+      "trigger": {
+        "any": [
+          {
+            "q": "sector",
+            "in": [
+              "education"
+            ]
+          },
+          {
+            "q": "data_types",
+            "in": [
+              "student"
+            ]
+          }
+        ]
+      },
+      "ai": [
+        "AI tutoring, proctoring, and learning analytics touching student records are in scope.",
+        "AI vendor contracts must include FERPA-compliant Data Use Agreements (DUAs).",
+        "Training AI on student records without consent or a valid exception is prohibited.",
+        "Automated academic decisions in admissions, grading, and discipline require disclosure."
+      ],
+      "enf": "Dept. of Education — withdrawal of federal funding.",
+      "act": "Review the Data Use Agreement (DUA) for any AI EdTech vendor before you deploy it — confirm it's FERPA-compliant.",
+      "source": "https://studentprivacy.ed.gov/content/family-educational-rights-and-privacy-act"
+    },
+    {
+      "id": "FTC5",
+      "name": "FTC Act Section 5 — Unfair or Deceptive Acts",
+      "cat": "federal",
+      "type": "both",
+      "year": "Ongoing",
+      "pri": "critical",
+      "scope": "All US businesses — universal catch-all for privacy and AI consumer harms.",
+      "smb": "Applies to every SMB using AI — this is your baseline liability exposure, regardless of size.",
+      "trigger": {
+        "always": true
+      },
+      "ai": [
+        "FTC has pursued companies for deceptive claims about AI capabilities, safety, and data practices.",
+        "Privacy policies must accurately and completely describe all AI data-processing activities.",
+        "AI-generated content that deceives consumers about its origin is a direct enforcement target.",
+        "Algorithmic discrimination causing consumer harm qualifies as an unfair practice."
+      ],
+      "enf": "FTC — injunctions and civil penalties. Note: AMG Capital Mgmt. v. FTC (2021) held that Section 13(b) does not authorize disgorgement/restitution in direct federal court actions; monetary relief now requires the administrative cease-and-desist process under Sections 5/19.",
+      "act": "Audit your own privacy policy and any AI marketing claims for accuracy — this is the FTC's most common enforcement angle.",
+      "source": "https://www.law.cornell.edu/uscode/text/15/45"
+    },
+    {
+      "id": "CFAA",
+      "name": "Computer Fraud and Abuse Act",
+      "cat": "federal",
+      "type": "cyber",
+      "year": "1986 / amended",
+      "pri": "important",
+      "scope": "All organizations — the primary federal law on unauthorized computer access and cybercrime.",
+      "smb": "Provides recourse after attacks; creates liability exposure for unauthorized security testing.",
+      "trigger": {
+        "always": true
+      },
+      "ai": [
+        "AI-generated attacks (automated credential stuffing, AI-driven hacking) constitute unauthorized access.",
+        "AI security tools probing systems must be explicitly authorized — unauthorized scanning creates exposure.",
+        "AI-assisted social engineering leading to system access meets the unauthorized-access threshold.",
+        "Employees using AI to exceed authorized access create CFAA liability."
+      ],
+      "enf": "DOJ — criminal penalties up to 10 years; civil damages available to victims.",
+      "act": "Get written authorization on file before running any AI-based security testing against systems you don't own.",
+      "source": "https://www.law.cornell.edu/uscode/text/18/1030"
+    },
+    {
+      "id": "CIRCIA",
+      "name": "Cyber Incident Reporting for Critical Infrastructure Act",
+      "cat": "federal",
+      "type": "cyber",
+      "year": "2022",
+      "pri": "critical",
+      "scope": "Critical infrastructure entities across 16 CISA sectors.",
+      "smb": "Many SMBs qualify without realizing it — check whether your business falls within a critical infrastructure sector.",
+      "trigger": {
+        "any": [
+          {
+            "q": "sector",
+            "in": [
+              "healthcare",
+              "finance",
+              "govcon"
+            ]
+          }
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "Covered-entity thresholds depend on CISA final rulemaking; confirm sector qualification.",
+      "ai": [
+        "AI-facilitated cyberattacks triggering CIRCIA reporting are an emerging category.",
+        "72-hour reporting for covered incidents; 24-hour reporting for ransomware payments.",
+        "CISA final rules will define covered-entity thresholds and reporting specifics.",
+        "Healthcare, financial services, water, and energy SMBs may qualify as covered entities."
+      ],
+      "enf": "CISA — subpoenas and civil penalties; final rulemaking will define enforcement.",
+      "act": "Check whether your business falls within one of CISA's 16 critical infrastructure sectors — if so, start preparing your incident-reporting process now.",
+      "source": "https://www.cisa.gov/topics/cyber-threats-and-advisories/information-sharing/cyber-incident-reporting-critical-infrastructure-act-2022-circia"
+    },
+    {
+      "id": "SEC_CYBER",
+      "name": "SEC Cybersecurity Disclosure Rules",
+      "cat": "federal",
+      "type": "cyber",
+      "year": "2023",
+      "pri": "important",
+      "scope": "SEC-registered public companies and foreign private issuers.",
+      "smb": "Directly relevant if you're a public company; sets board-level governance expectations you'll be measured against.",
+      "trigger": {
+        "q": "public_company",
+        "in": [
+          "public",
+          "both"
+        ]
+      },
+      "ai": [
+        "Material cybersecurity incidents must be disclosed within 4 business days on Form 8-K.",
+        "Annual cybersecurity risk management, strategy, and governance disclosure on Form 10-K.",
+        "Board cyber oversight and management expertise must be disclosed — drives vCISO demand.",
+        "AI-related cybersecurity risks must be disclosed if material — a direct advisory entry point."
+      ],
+      "enf": "SEC — enforcement actions, fines, and restatement exposure for material misstatement.",
+      "act": "Use the SEC's disclosure requirements as your template for board-level cybersecurity governance and reporting.",
+      "source": "https://www.sec.gov/newsroom/press-releases/2023-139"
+    },
+    {
+      "id": "CMMC",
+      "name": "Cybersecurity Maturity Model Certification 2.0",
+      "cat": "federal",
+      "type": "cyber",
+      "year": "2024",
+      "pri": "important",
+      "scope": "DoD contractors and subcontractors handling CUI or Federal Contract Information.",
+      "smb": "Critical for any SMB that is a DoD prime or sub-contractor.",
+      "trigger": {
+        "q": "public_company",
+        "in": [
+          "fed_contract",
+          "both"
+        ]
+      },
+      "ai": [
+        "AI tools processing CUI must meet CMMC requirements at the appropriate tier.",
+        "ML models trained on CUI are in scope — classification and handling requirements apply.",
+        "AI-driven vulnerability scanning in contract environments must produce CMMC-compliant output.",
+        "CMMC 2.0 Level 2 aligns with NIST SP 800-171 — 110 security practices required."
+      ],
+      "enf": "DoD — contract disqualification; false certification triggers treble damages under the False Claims Act.",
+      "act": "If you hold or plan to bid on DoD contracts, determine your required CMMC tier now — certification timelines run long.",
+      "source": "https://www.ecfr.gov/current/title-32/subtitle-A/chapter-I/subchapter-G/part-170"
+    },
+    {
+      "id": "CCPA",
+      "name": "California Consumer Privacy Act / Privacy Rights Act (CCPA/CPRA)",
+      "cat": "state",
+      "type": "privacy",
+      "year": "2020 / 2023",
+      "pri": "critical",
+      "scope": "Businesses with $25M+ revenue, 100K+ CA consumer records, or 50%+ revenue from data sales — serving CA residents.",
+      "smb": "Gold standard for US state law — most SMBs with CA customers should treat it as a compliance floor.",
+      "trigger": {
+        "q": "geography",
+        "in": [
+          "us_ca"
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "Coverage depends on revenue/volume thresholds — confirm the business meets one.",
+      "ai": [
+        "Right to opt out of Automated Decision-Making Technology (ADMT) — regulations finalized 2024.",
+        "Consumers can request human review of significant AI-driven decisions.",
+        "AI profiling and behavioral advertising require opt-out mechanisms and clear disclosure.",
+        "Sensitive data (biometrics, health, precise geolocation) has heightened AI use restrictions.",
+        "Data minimization and purpose limitation apply to all AI training data collection."
+      ],
+      "enf": "CPPA + CA AG — $2,500 per violation; $7,500 per intentional violation.",
+      "act": "Add Automated Decision-Making Technology (ADMT) opt-out and AI-use disclosure language to your privacy notice.",
+      "source": "https://oag.ca.gov/privacy/ccpa"
+    },
+    {
+      "id": "TX_TDPSA",
+      "name": "Texas Data Privacy and Security Act",
+      "cat": "state",
+      "type": "privacy",
+      "year": "2024",
+      "pri": "critical",
+      "scope": "Businesses processing TX residents' personal data in a household/individual context. Excludes employee and B2B data. Small businesses (per SBA) largely exempt but still barred from selling sensitive data without consent.",
+      "smb": "Broad reach with no revenue/volume threshold — but note the employment and B2B carve-outs.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_tx"
+            ]
+          },
+          {
+            "not": {
+              "q": "processing_context",
+              "in": [
+                "employees",
+                "b2b"
+              ]
+            }
+          }
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "SBA small-business exemption may apply; sensitive-data sale ban still applies regardless of size.",
+      "ai": [
+        "No revenue or volume threshold — broadly applicable, but only to consumer (not employee/B2B) data.",
+        "Right to opt out of targeted advertising, data sales, and AI profiling for consequential decisions.",
+        "Biometric and health data require opt-in consent before use in AI systems.",
+        "Data protection assessments required for AI processing with heightened privacy risk."
+      ],
+      "enf": "TX AG — up to $7,500 per violation.",
+      "act": "Confirm whether your data is consumer-context (in scope) or employee/B2B (excluded) before assuming this applies to you.",
+      "source": "https://statutes.capitol.texas.gov/Docs/BC/htm/BC.541.htm"
+    },
+    {
+      "id": "CO_CPA",
+      "name": "Colorado Privacy Act",
+      "cat": "state",
+      "type": "privacy",
+      "year": "2023",
+      "pri": "important",
+      "scope": "Controllers processing 100K+ CO consumers/year, or 25K+ with data-sale revenue.",
+      "smb": "The comprehensive privacy baseline for CO customers; pairs with the separate CO ADMT law.",
+      "trigger": {
+        "q": "geography",
+        "in": [
+          "us_co"
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "Coverage depends on the 100K-consumer / 25K-with-sales thresholds.",
+      "ai": [
+        "Right to opt out of profiling for decisions with legal or similarly significant effects.",
+        "Data protection assessments required for high-risk AI profiling.",
+        "Universal opt-out signal recognition required.",
+        "Opt-in consent required for sensitive data used in AI systems."
+      ],
+      "enf": "CO AG — up to $20,000 per violation.",
+      "act": "Prepare a data protection assessment for any AI profiling you run on Colorado consumers.",
+      "source": "https://coag.gov/resources/colorado-privacy-act/"
+    },
+    {
+      "id": "CO_ADMT",
+      "name": "Colorado AI Act — SB 26-189 (Automated Decision-Making Technology)",
+      "cat": "state",
+      "type": "ai_reg",
+      "year": "2026 (replaces SB 24-205)",
+      "pri": "critical",
+      "scope": "Developers and deployers of ADMT used in consequential decisions affecting CO residents. Replaces the repealed SB 24-205 with a transparency-focused framework.",
+      "smb": "The US AI-governance bellwether — effective Jan 1, 2027. Narrower than the repealed SB 205 (no duty of care), focused on disclosure and appeal rights.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_co"
+            ]
+          },
+          {
+            "q": "ai_use",
+            "in": [
+              "hiring",
+              "consequential",
+              "profiling"
+            ]
+          }
+        ]
+      },
+      "tier_override": "pending",
+      "tier_reason": "SB 26-189 takes effect January 1, 2027; SB 24-205 was repealed and never took effect.",
+      "ai": [
+        "Regulates ADMT in consequential decisions (employment, credit, insurance, housing, education).",
+        "Removes the repealed SB 205's duty-of-care and broad risk-management framework.",
+        "Developers must give deployers documentation sufficient for compliance.",
+        "Deployers must notify consumers of ADMT use and provide appeal/reconsideration.",
+        "3-year record retention; AG enforcement under the Colorado Consumer Protection Act."
+      ],
+      "enf": "CO AG under CCPA — violations treated as deceptive trade practices.",
+      "act": "Start building your ADMT disclosure and appeal process now — SB 26-189 takes effect January 1, 2027, and this is a national bellwether other states are likely to follow.",
+      "source": "https://leg.colorado.gov/bills/sb26-189"
+    },
+    {
+      "id": "VA_VCDPA",
+      "name": "Virginia Consumer Data Protection Act",
+      "cat": "state",
+      "type": "privacy",
+      "year": "2023",
+      "pri": "important",
+      "scope": "Controllers processing 100K+ VA consumers/year, or 25K+ generating 50%+ data-sale revenue.",
+      "smb": "GDPR-aligned structure — mastering VCDPA unlocks most other state frameworks.",
+      "trigger": {
+        "q": "geography",
+        "in": [
+          "us_va"
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "Coverage depends on the 100K / 25K-with-sales thresholds.",
+      "ai": [
+        "Right to opt out of profiling for targeted advertising, data sales, and significant decisions.",
+        "Data protection assessments required for high-risk AI profiling with significant legal effects.",
+        "Controller/processor structure mirrors GDPR — if you're already GDPR-compliant, adapting is quick.",
+        "Opt-in consent required for sensitive data categories used in AI systems."
+      ],
+      "enf": "VA AG — up to $7,500 per intentional violation.",
+      "act": "If you're building a multi-state privacy program, VCDPA's GDPR-aligned structure is a good baseline to start from.",
+      "source": "https://law.lis.virginia.gov/vacodefull/title59.1/chapter53/"
+    },
+    {
+      "id": "OTHER_STATES",
+      "name": "Other US State Comprehensive Privacy Laws",
+      "cat": "state",
+      "type": "privacy",
+      "year": "2023–2025",
+      "pri": "important",
+      "scope": "CT, MT, UT, IA, NH, NJ, TN, IN, OR, DE and others — 13+ states in effect by end of 2025.",
+      "smb": "Track which states your customers are in — the patchwork is expanding fast.",
+      "trigger": {
+        "q": "geography",
+        "in": [
+          "us_other"
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "Applicability and thresholds vary by state; confirm each based on customer geography.",
+      "ai": [
+        "All follow the VCDPA model: opt-out rights, data protection assessments, controller/processor roles.",
+        "Most include AI profiling restrictions for decisions with significant legal or financial effects.",
+        "Thresholds vary but converge around 100K consumers/year.",
+        "Federal privacy law remains stalled — the state patchwork will keep expanding."
+      ],
+      "enf": "Varies — typically $5K–$20K per violation, enforced by state AG.",
+      "act": "Map which states your customers are in — this patchwork is expanding fast, and each state sets its own thresholds.",
+      "source": "https://iapp.org/resources/article/us-state-privacy-legislation-tracker"
+    },
+    {
+      "id": "BREACH_NOTIF",
+      "name": "US State Breach Notification Laws",
+      "cat": "state",
+      "type": "cyber",
+      "year": "2002–present",
+      "pri": "critical",
+      "scope": "All 50 states, DC, Puerto Rico, and Guam — any business handling residents' personal information.",
+      "smb": "Universal — every SMB has breach notification obligations across some set of states.",
+      "trigger": {
+        "not": {
+          "q": "data_types",
+          "in": [
+            "none_sensitive"
+          ]
+        }
+      },
+      "ai": [
+        "AI systems breached and exposing personal data activate notification requirements.",
+        "AI-mediated breaches (e.g., prompt injection leading to exfiltration) fall under notification.",
+        "Timelines range 30–90 days by state; some require 72-hour notification.",
+        "AG notification required in most states; credit monitoring may be required for financial breaches."
+      ],
+      "enf": "State AGs — fines from $5K to millions depending on state and breach scope.",
+      "act": "Have a breach-notification playbook ready before an incident happens — deadlines vary by state, from 30 days down to 72 hours.",
+      "source": "https://www.ncsl.org/technology-and-communication/security-breach-notification-laws"
+    },
+    {
+      "id": "NY_DFS",
+      "name": "NY DFS Cybersecurity Regulation (23 NYCRR 500)",
+      "cat": "state",
+      "type": "cyber",
+      "year": "2017 / 2023",
+      "pri": "critical",
+      "scope": "Financial services companies licensed or operating in New York.",
+      "smb": "One of the most rigorous state cybersecurity laws — affects any financial SMB with NY operations.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_ny"
+            ]
+          },
+          {
+            "q": "sector",
+            "in": [
+              "finance"
+            ]
+          }
+        ]
+      },
+      "ai": [
+        "2023 amendments added explicit requirements for AI risk assessment within cybersecurity programs.",
+        "Written policies must cover AI tool use and vendor AI risk.",
+        "72-hour breach notification to NY DFS; annual CISO report and CEO certification required.",
+        "Class A companies face stricter requirements; smaller entities have lighter but real obligations."
+      ],
+      "enf": "NY DFS — fines up to $1,000 per violation per day; license revocation for serious failures.",
+      "act": "If you're a financial services firm with NY operations, treat 23 NYCRR 500 as your cybersecurity program baseline, not just a checkbox.",
+      "source": "https://www.dfs.ny.gov/cybersecurity/23-NYCRR-Part-500"
+    },
+    {
+      "id": "NY_SHIELD",
+      "name": "New York SHIELD Act",
+      "cat": "state",
+      "type": "cyber",
+      "year": "2019 / 2020",
+      "pri": "important",
+      "scope": "Any business owning or licensing data of NY residents — regardless of company location.",
+      "smb": "Extraterritorial reach — any business with NY customer data must implement reasonable cybersecurity.",
+      "trigger": {
+        "q": "geography",
+        "in": [
+          "us_ny"
+        ]
+      },
+      "ai": [
+        "Requires reasonable administrative, technical, and physical safeguards — includes AI tool risk management.",
+        "The reasonable-cybersecurity standard means AI tools processing NY resident data must be risk-assessed.",
+        "Expanded private-information definition includes biometric data — direct AI relevance.",
+        "Breach notification triggered by unauthorized access, not just acquisition — lowers the threshold."
+      ],
+      "enf": "NY AG — up to $250K in civil penalties for knowing and reckless violations.",
+      "act": "Run your AI tools through a 'reasonable safeguards' review if you hold any New York resident's data — this law reaches you regardless of where you're based.",
+      "source": "https://www.nysenate.gov/legislation/bills/2019/S5575"
+    },
+    {
+      "id": "CT_CTDPA",
+      "name": "Connecticut Data Privacy Act (as amended by PA 25-113)",
+      "cat": "state",
+      "type": "privacy",
+      "year": "2023 / 2026 amendments",
+      "pri": "critical",
+      "scope": "Controllers doing business in CT or targeting CT residents. As of July 1, 2026: 35K-consumer threshold (down from 100K), OR any processing of sensitive data, OR any sale of personal data — the last two with no volume threshold.",
+      "smb": "The 2026 amendments dramatically widen coverage — any SMB touching sensitive data or selling data is now in scope regardless of size.",
+      "trigger": {
+        "q": "geography",
+        "in": [
+          "us_ct"
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "In scope if processing sensitive data or selling data (no threshold), or 35K+ consumers — confirm which trigger applies.",
+      "ai": [
+        "Effective July 1, 2026: threshold lowered to 35K; new no-threshold triggers for sensitive data and any data sale.",
+        "Sensitive data expanded to include neural data and government ID numbers; opt-in consent required.",
+        "New LLM-training disclosure: controllers must disclose if personal data is used to train large language models.",
+        "Profiling opt-out expanded to decisions involving human review, not just solely-automated ones.",
+        "Data Protection & Impact Assessments now explicitly cover AI profiling and consequential decisions."
+      ],
+      "enf": "CT AG — exclusive enforcement, no private right of action; up to $5,000 per willful violation.",
+      "act": "Re-check your CT coverage as of July 1, 2026 — the sensitive-data and data-sale triggers have no volume threshold, so you may be newly in scope even if you weren't before.",
+      "source": "https://www.cga.ct.gov/current/pub/chap_743jj.htm"
+    },
+    {
+      "id": "IL_HB3773",
+      "name": "Illinois HB 3773 — AI in Employment",
+      "cat": "state",
+      "type": "ai_reg",
+      "year": "2024 (effective Jan 1, 2026)",
+      "pri": "critical",
+      "scope": "Employers of any size with employees in Illinois, or hiring in Illinois, using AI in employment decisions. Amends the Illinois Human Rights Act (775 ILCS 5/2-102(L)).",
+      "smb": "Applies to any size employer with even one IL employee — covers ATS, video interview analysis, and performance AI.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_il"
+            ]
+          },
+          {
+            "q": "ai_use",
+            "in": [
+              "hiring"
+            ]
+          }
+        ]
+      },
+      "ai": [
+        "Effect-based liability: unlawful to use AI that results in discrimination, even if unintentional.",
+        "Prohibits using zip codes as a proxy for protected classes.",
+        "Notice requirement: employers must tell employees/applicants when AI is used in covered decisions.",
+        "Covers recruitment, hiring, promotion, discipline, discharge, tenure, and conditions of employment.",
+        "IDHR to issue implementing rules on notice timing and method (draft rules issued Dec 2025)."
+      ],
+      "enf": "Illinois Dept. of Human Rights — IHRA complaint process; damages, penalties, fees, injunctive relief (no fixed per-violation cap).",
+      "act": "Audit your HR systems for AI components, and put a notice procedure and disparate-impact review in place before you use them on Illinois employees or applicants.",
+      "source": "https://www.ilga.gov/documents/legislation/103/HB/10300HB3773enr.htm"
+    },
+    {
+      "id": "TN_ELVIS",
+      "name": "Tennessee ELVIS Act (Ensuring Likeness Voice and Image Security)",
+      "cat": "state",
+      "type": "ai_reg",
+      "year": "2024",
+      "pri": "important",
+      "scope": "Protects any individual's name, photograph, voice, or likeness — including AI-generated voice clones and deepfakes. Amends TN's Personal Rights Protection Act (Tenn. Code Ann. § 47-25-1101 et seq.).",
+      "smb": "Relevant to any SMB in music, media, entertainment, or generative AI — and to platforms/tools that distribute or enable synthetic voice/likeness.",
+      "trigger": {
+        "any": [
+          {
+            "q": "sector",
+            "in": [
+              "media"
+            ]
+          },
+          {
+            "q": "ai_use",
+            "in": [
+              "voice_likeness",
+              "gen_content"
+            ]
+          }
+        ]
+      },
+      "ai": [
+        "Covers AI-generated voice clones and visual deepfakes explicitly — 'voice' includes simulations.",
+        "Secondary liability: platforms and tool providers liable for distributing or enabling unauthorized use.",
+        "Liability for distributing an algorithm/tool whose primary purpose is producing a person's voice/likeness.",
+        "Fair-use (news/sports/public affairs) exemption narrowed to First-Amendment-protected uses.",
+        "Applies to deceased individuals' rights (heirs/executor have standing)."
+      ],
+      "enf": "Civil action; statutory damages; remedies explicitly cumulative with other law.",
+      "act": "If your business touches voice cloning, deepfakes, or synthetic media, assess your exposure — and your vendors' — under this law before you ship.",
+      "source": "https://www.capitol.tn.gov/Bills/113/Bill/HB2091.pdf"
+    },
+    {
+      "id": "UT_UAIPA",
+      "name": "Utah Artificial Intelligence Policy Act (as amended 2025)",
+      "cat": "state",
+      "type": "ai_reg",
+      "year": "2024 / 2025 amendments",
+      "pri": "watch",
+      "scope": "Entities using generative AI to interact with Utah consumers. 2025 amendments (SB 226, SB 332) narrowed the disclosure duty and extended the sunset to July 1, 2027.",
+      "smb": "Narrower than the 2024 original — disclosure now required only on clear request, or for high-risk interactions in regulated occupations.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_ut"
+            ]
+          },
+          {
+            "q": "ai_use",
+            "in": [
+              "chatbot",
+              "gen_content"
+            ]
+          }
+        ]
+      },
+      "ai": [
+        "2025 SB 226 narrowed disclosure: required only on a clear and unambiguous consumer request.",
+        "Regulated occupations (licensed professions) must disclose only for 'high-risk AI interactions'.",
+        "Safe harbor if the GenAI itself clearly discloses it is non-human at the outset and throughout.",
+        "'Generative AI' redefined more narrowly (systems designed to simulate human conversation).",
+        "Companion laws: HB 452 (mental-health chatbots), SB 271 (AI deepfake identity protection)."
+      ],
+      "enf": "Utah Division of Consumer Protection — up to $2,500 admin fine per violation; AG civil penalties up to $5,000.",
+      "act": "If you run a chatbot for Utah consumers, have it clearly disclose it's not human at the outset — that alone qualifies you for the safe harbor.",
+      "source": "https://le.utah.gov/xcode/Title13/Chapter72/13-72.html"
+    },
+    {
+      "id": "GDPR",
+      "name": "EU General Data Protection Regulation",
+      "cat": "intl",
+      "type": "privacy",
+      "year": "2018",
+      "pri": "critical",
+      "scope": "Any organization offering goods/services to, or monitoring behavior of, EU/EEA data subjects — regardless of company location.",
+      "smb": "Applies to any SMB with EU customers, EU employees, or EU vendor data.",
+      "trigger": {
+        "q": "geography",
+        "in": [
+          "eu"
+        ]
+      },
+      "ai": [
+        "Article 22: right not to be subject to solely automated decisions with significant legal effects.",
+        "Mandatory human-review option for AI-driven consequential decisions.",
+        "Valid legal basis required for AI training data (consent, legitimate interest, contract).",
+        "DPIAs required before deploying high-risk AI processing.",
+        "Right to explanation for automated decisions; US AI-tool transfers require SCCs or adequacy."
+      ],
+      "enf": "National DPAs — up to €20M or 4% of global annual turnover, whichever is higher.",
+      "act": "Run a Data Protection Impact Assessment (DPIA) on any AI system that processes EU personal data, and confirm your US AI vendors have valid SCCs in place.",
+      "source": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+    },
+    {
+      "id": "UK_GDPR",
+      "name": "UK GDPR + Data (Use and Access) Act 2025",
+      "cat": "intl",
+      "type": "privacy",
+      "year": "2021 / 2025",
+      "pri": "important",
+      "scope": "Organizations processing UK residents' personal data. The Data (Use and Access) Act 2025 rewrote the automated-decision-making rules, diverging from the EU.",
+      "smb": "Treat as a separate obligation from EU GDPR — the 2025 Act changed the ADM framework materially.",
+      "trigger": {
+        "q": "geography",
+        "in": [
+          "uk"
+        ]
+      },
+      "ai": [
+        "DUAA 2025 replaced Article 22 with new Articles 22A–22D (effective Feb 5, 2026).",
+        "Default FLIPPED from prohibition-first to permission-first for solely automated decisions.",
+        "Significant decisions still require safeguards: notice, explanation, human review, right to contest.",
+        "'Meaningful human involvement' and 'significant decision' await Secretary-of-State regulations and ICO guidance.",
+        "UK + EU operations now need separate ADM compliance frameworks — they have diverged."
+      ],
+      "enf": "ICO — up to £17.5M or 4% of global annual turnover.",
+      "act": "Don't assume EU GDPR compliance covers you in the UK — map your UK data flows separately under the new Articles 22A–22D.",
+      "source": "https://www.legislation.gov.uk/eur/2016/679"
+    },
+    {
+      "id": "PIPEDA",
+      "name": "Canada PIPEDA (+ proposed AIDA / Bill C-27)",
+      "cat": "intl",
+      "type": "both",
+      "year": "2001 / pending",
+      "pri": "watch",
+      "scope": "Private-sector organizations collecting, using, or disclosing personal information in commercial activities in Canada.",
+      "smb": "Active now for any SMB with Canadian customers; Bill C-27 would add AI-specific requirements.",
+      "trigger": {
+        "q": "geography",
+        "in": [
+          "canada"
+        ]
+      },
+      "ai": [
+        "Meaningful consent is difficult when AI processing is complex or opaque to users.",
+        "Bill C-27 proposes the Artificial Intelligence and Data Act (AIDA) for high-impact AI systems.",
+        "AIDA would require risk assessments, monitoring, and record-keeping for high-impact AI.",
+        "Breach notification for significant risk applies to AI systems handling personal data."
+      ],
+      "enf": "OPC — up to CAD $100K (increasing significantly under proposed C-27).",
+      "act": "Keep an eye on Bill C-27/AIDA — if it passes, AI-specific risk assessment and record-keeping requirements will apply to high-impact AI systems.",
+      "source": "https://laws-lois.justice.gc.ca/eng/acts/p-8.6/"
+    },
+    {
+      "id": "NIS2",
+      "name": "EU NIS2 Directive",
+      "cat": "intl",
+      "type": "cyber",
+      "year": "2024",
+      "pri": "critical",
+      "scope": "Medium and large entities in 18 critical sectors operating in the EU. As a Directive, it is transposed differently by each member state — there is no single EU-wide compliance standard.",
+      "smb": "Medium SMBs (50+ employees or €10M+ revenue) in scope sectors are covered — but compliance depends on which member state's national law applies.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "eu"
+            ]
+          },
+          {
+            "q": "sector",
+            "in": [
+              "healthcare",
+              "finance",
+              "tech_saas",
+              "govcon"
+            ]
+          },
+          {
+            "not": {
+              "q": "size",
+              "in": [
+                "micro"
+              ]
+            }
+          }
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "NIS2 is transposed per member state with varying scope and penalties; confirm the applicable national law.",
+      "ai": [
+        "AI systems in critical infrastructure and essential services are in scope for NIS2 security requirements.",
+        "Risk management must cover supply-chain security including AI vendors and tool providers.",
+        "Significant incident reporting: 24-hour early warning; 72-hour full report to the national authority.",
+        "Board members are personally liable for NIS2 compliance failures — this raises the stakes at the leadership level.",
+        "As a Directive, obligations vary by member state — no uniform EU-wide compliance."
+      ],
+      "enf": "National authorities — up to €10M or 2% of global turnover for essential entities (varies by member state).",
+      "act": "If you operate in an EU critical-infrastructure sector, find out how the specific member state you operate in transposed NIS2 — there's no single EU-wide standard to comply with.",
+      "source": "https://eur-lex.europa.eu/eli/dir/2022/2555/oj"
+    },
+    {
+      "id": "EU_AI_ACT",
+      "name": "EU Artificial Intelligence Act",
+      "cat": "ai",
+      "type": "ai_reg",
+      "year": "2024 (phased; amended by Digital Omnibus 2026)",
+      "pri": "critical",
+      "scope": "Providers and deployers of AI systems used in the EU — a risk-tiered framework applicable to any company globally.",
+      "smb": "Applies to any SMB deploying AI affecting EU users. Prohibited uses in force since Feb 2025; high-risk deadlines deferred by the Digital Omnibus.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "eu"
+            ]
+          },
+          {
+            "not": {
+              "q": "ai_use",
+              "in": [
+                "no_ai"
+              ]
+            }
+          }
+        ]
+      },
+      "ai": [
+        "Four risk tiers: Unacceptable (banned), High-risk, Limited-risk, Minimal-risk.",
+        "Prohibited since Feb 2025: social scoring, manipulative AI, most real-time biometric surveillance.",
+        "Article 50 transparency (AI disclosure, content labeling) still takes effect August 2, 2026.",
+        "High-risk AI (Annex III) obligations DEFERRED to December 2, 2027 by the Digital Omnibus (Reg. EU 2026/1744).",
+        "High-risk AI in regulated products (Annex I) deferred to August 2, 2028.",
+        "General-Purpose AI (LLM) obligations in effect since August 2025."
+      ],
+      "enf": "National market surveillance authorities — up to €35M or 7% of global annual turnover.",
+      "act": "Build an inventory of every AI system you use or offer to EU users, and classify each by risk tier now — the high-risk deadlines are deferred, not cancelled.",
+      "source": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng"
+    },
+    {
+      "id": "NIST_AI_RMF",
+      "name": "NIST AI Risk Management Framework 1.0",
+      "cat": "ai",
+      "type": "ai_reg",
+      "year": "2023",
+      "pri": "critical",
+      "scope": "Voluntary — all organizations developing, deploying, or using AI. GenAI Profile (2024) covers LLMs.",
+      "smb": "The most widely referenced AI governance framework right now — a strong foundation for your AI security and governance program.",
+      "trigger": {
+        "not": {
+          "q": "ai_use",
+          "in": [
+            "no_ai"
+          ]
+        }
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Voluntary framework — recommended for any AI-using business.",
+      "ai": [
+        "Four core functions: GOVERN, MAP, MEASURE, MANAGE — a structured AI risk lifecycle.",
+        "Trustworthy AI properties: Accountable, Explainable, Fair, Privacy-enhanced, Reliable, Safe, Secure, Transparent.",
+        "GenAI Profile (2024) addresses LLM risks: hallucination, data poisoning, and misuse.",
+        "AI RMF Playbook provides 72 suggested actions mapped to each core function.",
+        "Referenced in federal contracts, insurance requirements, and litigation with increasing frequency."
+      ],
+      "enf": "Voluntary — increasingly required in contracts, federal programs, and litigation.",
+      "act": "Structure your AI risk management around the four core functions — GOVERN, MAP, MEASURE, MANAGE — even though this framework is voluntary; it's increasingly expected in contracts and litigation.",
+      "source": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf"
+    },
+    {
+      "id": "NIST_CSF",
+      "name": "NIST Cybersecurity Framework 2.0",
+      "cat": "fw",
+      "type": "cyber",
+      "year": "2024",
+      "pri": "critical",
+      "scope": "Voluntary — all organizations; 2024 update adds the GOVERN function and broadens applicability.",
+      "smb": "The foundational cybersecurity framework for any SMB — a solid place to start a security program.",
+      "trigger": {
+        "always": true
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Voluntary framework — recommended baseline for all organizations.",
+      "ai": [
+        "New GOVERN function (2024) explicitly addresses AI and technology risk governance.",
+        "AI system security maps across all six functions: GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND, RECOVER.",
+        "AI vendor risk management addressed under GOVERN and IDENTIFY supply-chain categories.",
+        "CSF 2.0 profiles allow tailoring to AI-specific deployment contexts."
+      ],
+      "enf": "Voluntary — referenced in contracts, regulations, litigation, and cyber insurance applications.",
+      "act": "Use NIST CSF 2.0 as your cybersecurity baseline — it now includes a GOVERN function that explicitly covers AI and technology risk.",
+      "source": "https://csrc.nist.gov/pubs/cswp/29/the-nist-cybersecurity-framework-csf-20/final"
+    },
+    {
+      "id": "ISO_27001",
+      "name": "ISO/IEC 27001:2022 — Information Security Management",
+      "cat": "fw",
+      "type": "cyber",
+      "year": "2022",
+      "pri": "critical",
+      "scope": "Organizations of all sizes — the international gold standard for ISMS. The 2013 edition expired October 31, 2025; only the 2022 edition is valid.",
+      "smb": "Increasingly required by enterprise customers in vendor contracts — a major credibility signal.",
+      "trigger": {
+        "any": [
+          {
+            "q": "sector",
+            "in": [
+              "tech_saas"
+            ]
+          },
+          {
+            "q": "processing_context",
+            "in": [
+              "b2b"
+            ]
+          }
+        ]
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Certification is voluntary but market-driven; recommended for enterprise-facing SMBs.",
+      "ai": [
+        "The 2013 edition is obsolete — all certifications must now be to the 2022 edition (2013 expired Oct 31, 2025).",
+        "2022 adds 11 controls (cloud, threat intelligence, data masking) — AI tools fall under cloud and data handling.",
+        "Annex A Control 5.23 covers cloud service security — where most AI tools live.",
+        "AI tool risk assessment fits naturally within the ISO 27001 risk-treatment process.",
+        "ISO 27701 and ISO 42001 are direct extensions — a natural next step once you're certified."
+      ],
+      "enf": "Certification-based — third-party audit; increasingly demanded by enterprise buyers.",
+      "act": "If enterprise customers are asking for ISO 27001, start with the 2022 edition — the 2013 edition expired and no longer counts.",
+      "source": "https://www.iso.org/standard/27001"
+    },
+    {
+      "id": "PCI_DSS",
+      "name": "PCI DSS v4.0 — Payment Card Industry Data Security Standard",
+      "cat": "fw",
+      "type": "cyber",
+      "year": "2022",
+      "pri": "critical",
+      "scope": "Any organization that stores, processes, or transmits payment card data — mandatory by contract with card brands.",
+      "smb": "Applies to virtually every SMB that accepts cards; scope reduced when using a compliant third-party processor.",
+      "trigger": {
+        "q": "payment_cards",
+        "in": [
+          "yes_direct",
+          "yes_processor"
+        ]
+      },
+      "tier_override_map": {
+        "yes_processor": "verify"
+      },
+      "tier_reason": "Direct processing = full scope; third-party processor = reduced scope (SAQ), confirm the SAQ type.",
+      "ai": [
+        "AI tools with access to cardholder data environments are in scope for PCI DSS.",
+        "Requirement 6.3 (vulnerability management) — AI-assisted scanning must produce compliant output.",
+        "Requirement 12.3 requires documented risk analysis for payment technologies — AI tools included.",
+        "Version 4.0 introduces a customized approach allowing AI-driven compensating controls."
+      ],
+      "enf": "Card brand penalties — fines, increased fees, and potential loss of ability to process payments.",
+      "act": "Make sure any AI tool with access to cardholder data is explicitly scoped into your PCI DSS assessment.",
+      "source": "https://www.pcisecuritystandards.org/standards/pci-dss/"
+    },
+    {
+      "id": "CIS_V8",
+      "name": "CIS Controls v8",
+      "cat": "fw",
+      "type": "cyber",
+      "year": "2021",
+      "pri": "important",
+      "scope": "Voluntary — all organizations; 18 controls with Implementation Groups (IG1–IG3) for right-sizing.",
+      "smb": "IG1 (56 safeguards) is designed for resource-constrained SMBs — a practical starting point.",
+      "trigger": {
+        "always": true
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Voluntary framework — recommended SMB on-ramp.",
+      "ai": [
+        "Control 2 (Software Asset Management) now covers SaaS and cloud-hosted AI tools.",
+        "Control 3 (Data Protection) applies to data processed by AI systems including training data.",
+        "Control 12 (Network Infrastructure) covers network paths that AI tools traverse.",
+        "IG1's 56 safeguards are a defensible baseline before AI risk layering."
+      ],
+      "enf": "Voluntary — widely used as a litigation-defensibility benchmark.",
+      "act": "If you're resource-constrained, start with CIS Controls Implementation Group 1 (56 safeguards) as your baseline before adding AI-specific controls.",
+      "source": "https://www.cisecurity.org/controls/v8"
+    },
+    {
+      "id": "HITRUST",
+      "name": "HITRUST Common Security Framework",
+      "cat": "fw",
+      "type": "cyber",
+      "year": "Ongoing",
+      "pri": "important",
+      "scope": "Healthcare organizations and their business associates — the healthcare industry's dominant certifiable framework.",
+      "smb": "Required or strongly preferred by health-system enterprise buyers selecting SMB vendors.",
+      "trigger": {
+        "any": [
+          {
+            "q": "sector",
+            "in": [
+              "healthcare"
+            ]
+          },
+          {
+            "q": "data_types",
+            "in": [
+              "health_phi"
+            ]
+          }
+        ]
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Certification is market-driven; recommended for healthcare SMBs seeking enterprise contracts.",
+      "ai": [
+        "AI tools processing PHI in healthcare need to be scoped into HITRUST assessments.",
+        "MyCSF platform includes AI-specific control domains in recent versions.",
+        "HITRUST certification opens doors to enterprise health-system contracts.",
+        "Maps to HIPAA, NIST CSF, and ISO 27001 simultaneously — reduces duplicative work."
+      ],
+      "enf": "Certification-based — market-driven requirement from healthcare enterprise buyers.",
+      "act": "If you're selling into health systems, HITRUST certification is often the deciding factor in vendor selection — budget for it early.",
+      "source": "https://hitrustalliance.net/hitrust-framework"
+    },
+    {
+      "id": "NIST_PRIVACY",
+      "name": "NIST Privacy Framework v1.0",
+      "cat": "fw",
+      "type": "privacy",
+      "year": "2020",
+      "pri": "critical",
+      "scope": "Voluntary — all organizations managing privacy risk in products and services.",
+      "smb": "Foundation for any SMB privacy program; pairs naturally with the NIST AI RMF for a complete picture.",
+      "trigger": {
+        "not": {
+          "q": "data_types",
+          "in": [
+            "none_sensitive"
+          ]
+        }
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Voluntary framework — recommended for any business handling personal data.",
+      "ai": [
+        "Five functions: IDENTIFY-P, GOVERN-P, CONTROL-P, COMMUNICATE-P, PROTECT-P.",
+        "Designed to integrate with NIST CSF and AI RMF — a unified three-framework ecosystem.",
+        "Data-processing ecosystem mapping applies directly to AI vendor supply chains.",
+        "Addresses problematic data actions: correlation, aggregation, and re-identification in AI systems."
+      ],
+      "enf": "Voluntary — no penalties; positions you ahead of upcoming regulatory requirements.",
+      "act": "Pair the NIST Privacy Framework with the AI RMF — together they cover both your privacy program and your AI risk management.",
+      "source": "https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.01162020.pdf"
+    },
+    {
+      "id": "ISO_27701",
+      "name": "ISO/IEC 27701 — Privacy Information Management",
+      "cat": "fw",
+      "type": "privacy",
+      "year": "2019",
+      "pri": "important",
+      "scope": "Extension to ISO 27001/27002 — adds privacy management requirements for PII controllers and processors.",
+      "smb": "High value if you're pursuing ISO 27001 — this is the privacy extension enterprise buyers increasingly expect alongside it.",
+      "trigger": {
+        "all": [
+          {
+            "any": [
+              {
+                "q": "sector",
+                "in": [
+                  "tech_saas"
+                ]
+              },
+              {
+                "q": "processing_context",
+                "in": [
+                  "b2b"
+                ]
+              }
+            ]
+          },
+          {
+            "not": {
+              "q": "data_types",
+              "in": [
+                "none_sensitive"
+              ]
+            }
+          }
+        ]
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Certification is market-driven; recommended as an add-on to ISO 27001 work.",
+      "ai": [
+        "PII controller/processor roles map directly to AI vendor relationship structures.",
+        "Data-processing inventory requirements capture AI training and inference data flows.",
+        "Privacy by design and by default must be embedded into AI system design.",
+        "Third-party risk management extends explicitly to AI vendors and sub-processors."
+      ],
+      "enf": "Certification-based — increasingly required in enterprise vendor contracts.",
+      "act": "If you're pursuing ISO 27001, add ISO 27701 at the same time — it's the privacy extension enterprise customers increasingly expect alongside it.",
+      "source": "https://www.iso.org/standard/27701"
+    },
+    {
+      "id": "ISO_42001",
+      "name": "ISO/IEC 42001 — AI Management System",
+      "cat": "fw",
+      "type": "ai_reg",
+      "year": "2023",
+      "pri": "important",
+      "scope": "Organizations developing, providing, or using AI — the first international AI management system standard.",
+      "smb": "Emerging market requirement — your enterprise customers will increasingly expect this certification if you're an AI-using vendor.",
+      "trigger": {
+        "not": {
+          "q": "ai_use",
+          "in": [
+            "no_ai"
+          ]
+        }
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Emerging voluntary standard — recommended for AI-using businesses anticipating enterprise requirements.",
+      "ai": [
+        "First international standard for organizational AI management systems.",
+        "Covers AI policy, risk assessment, objectives, controls, and performance monitoring.",
+        "Annexes provide implementation guidance for AI use cases and impact assessments.",
+        "Certification track is emerging — likely to follow the ISO 27001 trajectory."
+      ],
+      "enf": "Certification-based — emerging contractual requirement in enterprise and regulated sectors.",
+      "act": "Map your AI practices against ISO 42001 now — it's the first international AI management standard, and enterprise customers will start requiring it.",
+      "source": "https://www.iso.org/standard/42001"
+    },
+    {
+      "id": "SOC2",
+      "name": "SOC 2 — Trust Services Criteria",
+      "cat": "fw",
+      "type": "both",
+      "year": "AICPA / ongoing",
+      "pri": "critical",
+      "scope": "Service organizations storing, processing, or transmitting customer data — a market-driven standard.",
+      "smb": "Enterprise buyers require SOC 2 from SaaS vendors — AI components are now scrutinized in audits.",
+      "trigger": {
+        "any": [
+          {
+            "q": "sector",
+            "in": [
+              "tech_saas"
+            ]
+          },
+          {
+            "q": "processing_context",
+            "in": [
+              "b2b"
+            ]
+          }
+        ]
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Market-driven attestation; recommended for SaaS and B2B service providers.",
+      "ai": [
+        "AI systems are now in-scope components for Type II audits and must appear in system descriptions.",
+        "Privacy Trust Services Criteria covers notice, choice, collection, use, retention, and disposal.",
+        "AI vendor management addressed under Common Criteria CC9 for third-party oversight.",
+        "LLM and AI tool use in service delivery introduces new control requirements auditors examine."
+      ],
+      "enf": "Market-driven — required by enterprise buyers and in vendor contracts.",
+      "act": "Make sure your SOC 2 scope explicitly includes every AI tool in your service delivery path — auditors are scrutinizing this now.",
+      "source": "https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022"
+    }
+  ]
+}

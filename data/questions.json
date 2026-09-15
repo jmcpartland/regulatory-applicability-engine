@@ -1,0 +1,310 @@
+{
+  "meta": {
+    "version": "1.1",
+    "description": "Answer vocabulary for the regulatory applicability engine. Each question's answer IDs are referenced by trigger logic in laws.json. Questions are ordered by discriminating power.",
+    "note": "Multi-select questions return arrays; single-select return one id. Trigger logic uses tri-state: a signal is TRUE (present), FALSE (explicitly absent), or NULL (user unsure / not asked).",
+    "mandatory_rule": "Questions with mandatory:true gate coverage \u2014 the form cannot be submitted until they are answered, so their triggers never resolve to unknown. Optional questions fall back to their `default` when skipped, so an unanswered optional question refines rather than floods the result."
+  },
+  "questions": [
+    {
+      "id": "sector",
+      "order": 1,
+      "type": "single_select",
+      "prompt": "What best describes your primary industry?",
+      "help": "Pick the one that fits most of your business. Regulated sectors (healthcare, finance, education) carry mandatory obligations.",
+      "answers": [
+        {
+          "id": "healthcare",
+          "label": "Healthcare / health services"
+        },
+        {
+          "id": "finance",
+          "label": "Financial services / insurance / lending"
+        },
+        {
+          "id": "education",
+          "label": "Education / EdTech"
+        },
+        {
+          "id": "govcon",
+          "label": "Government / defense contractor"
+        },
+        {
+          "id": "tech_saas",
+          "label": "Technology / SaaS / software"
+        },
+        {
+          "id": "media",
+          "label": "Media / entertainment / creative"
+        },
+        {
+          "id": "retail",
+          "label": "Retail / e-commerce / consumer goods"
+        },
+        {
+          "id": "other",
+          "label": "Other / general business"
+        }
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "geography",
+      "order": 2,
+      "type": "multi_select",
+      "prompt": "Where are your customers, users, or employees located?",
+      "help": "Select all that apply. Privacy and AI laws often reach any business touching residents of a jurisdiction, regardless of where you are based.",
+      "answers": [
+        {
+          "id": "us_ca",
+          "label": "California"
+        },
+        {
+          "id": "us_tx",
+          "label": "Texas"
+        },
+        {
+          "id": "us_co",
+          "label": "Colorado"
+        },
+        {
+          "id": "us_va",
+          "label": "Virginia"
+        },
+        {
+          "id": "us_ny",
+          "label": "New York"
+        },
+        {
+          "id": "us_ct",
+          "label": "Connecticut"
+        },
+        {
+          "id": "us_il",
+          "label": "Illinois"
+        },
+        {
+          "id": "us_tn",
+          "label": "Tennessee"
+        },
+        {
+          "id": "us_ut",
+          "label": "Utah"
+        },
+        {
+          "id": "us_other",
+          "label": "Other US states"
+        },
+        {
+          "id": "eu",
+          "label": "European Union / EEA"
+        },
+        {
+          "id": "uk",
+          "label": "United Kingdom"
+        },
+        {
+          "id": "canada",
+          "label": "Canada"
+        }
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "data_types",
+      "order": 3,
+      "type": "multi_select",
+      "prompt": "What kinds of data does your business handle?",
+      "help": "Select all that apply. Sensitive data categories trigger heightened obligations and, in some states, coverage regardless of size.",
+      "answers": [
+        {
+          "id": "health_phi",
+          "label": "Health / medical records (PHI)"
+        },
+        {
+          "id": "financial",
+          "label": "Financial account or payment card data"
+        },
+        {
+          "id": "biometric",
+          "label": "Biometric data (face, fingerprint, voice)"
+        },
+        {
+          "id": "children",
+          "label": "Data about children under 13 (or under 18)"
+        },
+        {
+          "id": "student",
+          "label": "Student education records"
+        },
+        {
+          "id": "gov_id",
+          "label": "Government IDs (SSN, driver's license, passport)"
+        },
+        {
+          "id": "consumer_pii",
+          "label": "General consumer personal data (name, email, address)"
+        },
+        {
+          "id": "employee",
+          "label": "Employee / HR records only"
+        },
+        {
+          "id": "none_sensitive",
+          "label": "None of the above \u2014 minimal personal data"
+        }
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "ai_use",
+      "order": 4,
+      "type": "multi_select",
+      "prompt": "How does your business use AI?",
+      "help": "Select all that apply. Different AI uses trigger different rules \u2014 employment decisions, consumer-facing bots, and content generation each have distinct obligations.",
+      "answers": [
+        {
+          "id": "hiring",
+          "label": "Hiring, promotion, or employment decisions"
+        },
+        {
+          "id": "consequential",
+          "label": "Consequential decisions (credit, insurance, housing, healthcare)"
+        },
+        {
+          "id": "profiling",
+          "label": "Profiling or automated decision-making about people"
+        },
+        {
+          "id": "chatbot",
+          "label": "Consumer-facing chatbots or virtual assistants"
+        },
+        {
+          "id": "gen_content",
+          "label": "Generating content (text, images, voice, video)"
+        },
+        {
+          "id": "voice_likeness",
+          "label": "Cloning or synthesizing a person's voice or likeness"
+        },
+        {
+          "id": "llm_training",
+          "label": "Training AI models on personal data"
+        },
+        {
+          "id": "internal_only",
+          "label": "Internal productivity tools only (no decisions about people)"
+        },
+        {
+          "id": "no_ai",
+          "label": "No AI use currently"
+        }
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "processing_context",
+      "order": 5,
+      "type": "single_select",
+      "prompt": "Whose data are you primarily processing?",
+      "help": "This matters because some laws (like Texas's) exclude employee and business-to-business data entirely.",
+      "answers": [
+        {
+          "id": "consumers",
+          "label": "Consumers / individuals in a personal capacity"
+        },
+        {
+          "id": "employees",
+          "label": "Employees, contractors, or job applicants"
+        },
+        {
+          "id": "b2b",
+          "label": "Other businesses (B2B contacts)"
+        },
+        {
+          "id": "mixed",
+          "label": "A mix of consumers and employees"
+        }
+      ],
+      "mandatory": false,
+      "default": "consumers"
+    },
+    {
+      "id": "size",
+      "order": 6,
+      "type": "single_select",
+      "prompt": "How large is your business?",
+      "help": "Some laws only apply above employee or revenue thresholds; others apply to any size.",
+      "answers": [
+        {
+          "id": "micro",
+          "label": "Under 50 employees"
+        },
+        {
+          "id": "small",
+          "label": "50 \u2013 250 employees"
+        },
+        {
+          "id": "mid",
+          "label": "250 \u2013 500 employees"
+        },
+        {
+          "id": "large",
+          "label": "Over 500 employees"
+        }
+      ],
+      "mandatory": false,
+      "default": "micro"
+    },
+    {
+      "id": "public_company",
+      "order": 7,
+      "type": "single_select",
+      "prompt": "Is your company publicly traded, or do you have any government contracts?",
+      "help": "Public companies face SEC disclosure rules; federal contractors face CMMC and related requirements.",
+      "answers": [
+        {
+          "id": "public",
+          "label": "Publicly traded (SEC-registered)"
+        },
+        {
+          "id": "fed_contract",
+          "label": "We hold federal / DoD contracts"
+        },
+        {
+          "id": "both",
+          "label": "Both public and federal contracts"
+        },
+        {
+          "id": "neither",
+          "label": "Neither \u2014 privately held, no federal contracts"
+        }
+      ],
+      "mandatory": false,
+      "default": "neither"
+    },
+    {
+      "id": "payment_cards",
+      "order": 8,
+      "type": "single_select",
+      "prompt": "Do you accept credit or debit card payments?",
+      "help": "Card acceptance brings PCI DSS obligations by contract, regardless of your size or location.",
+      "answers": [
+        {
+          "id": "yes_direct",
+          "label": "Yes \u2014 we process cards directly"
+        },
+        {
+          "id": "yes_processor",
+          "label": "Yes \u2014 but only through a third-party processor (Stripe, Square, etc.)"
+        },
+        {
+          "id": "no",
+          "label": "No card payments"
+        }
+      ],
+      "mandatory": false,
+      "default": "no"
+    }
+  ]
+}
