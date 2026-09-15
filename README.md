@@ -1,4 +1,7 @@
-# Regulatory Applicability Engine — Build Handoff
+# Compliance Check — Build Handoff
+
+(Internal/technical names — repo, folder, npm package, Cloudflare Pages project, and the
+`regulatory.mcpartland.ai` subdomain — are unchanged; only the user-facing display name changed.)
 
 Free lead-magnet tool for the Fractional CISO / AI Security Advisor practice.
 Takes 8 questions about an SMB and returns which privacy / cyber / AI regulations

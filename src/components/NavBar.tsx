@@ -20,7 +20,7 @@ export function NavBar({ view, onNavigate }: { view: View; onNavigate: (view: Vi
   return (
     <header className="border-b border-slate-200">
       <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <span className="text-sm font-bold text-slate-900">Regulatory Applicability Engine</span>
+        <span className="text-sm font-bold text-slate-900">Compliance Check</span>
         <nav className="flex gap-1">
           <NavLink active={view === 'assessment'} onClick={() => onNavigate('assessment')}>
             Assessment

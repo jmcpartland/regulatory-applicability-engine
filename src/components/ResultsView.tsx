@@ -29,7 +29,9 @@ export function ResultsView({ grouped, onEditAnswers }: { grouped: GroupedResult
       </div>
 
       <p className="mt-4 rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-        This runs entirely in your browser — nothing you enter here is stored or sent anywhere.
+        This runs entirely in your browser — nothing you enter here is stored or sent anywhere. Compliance Check
+        covers a curated set of major regulations, not every law in every jurisdiction, and isn't a substitute for
+        legal advice.
       </p>
 
       {total > 0 && (
