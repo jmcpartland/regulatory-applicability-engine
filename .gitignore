@@ -17,3 +17,6 @@ npm-debug.log*
 
 # Claude Code session-local state
 .claude/scheduled_tasks.lock
+
+# Wrangler (Cloudflare) local state
+.wrangler
