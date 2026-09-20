@@ -90,11 +90,12 @@ export function QuestionForm({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="text-2xl font-bold text-slate-900">Which regulations apply to your business?</h1>
+      <h1 className="text-2xl font-bold text-slate-900">Which AI regulations apply to your business?</h1>
       <p className="mt-2 text-sm text-slate-600">
-        Compliance Check covers major U.S. federal and state privacy, cybersecurity, and AI regulations, key
-        international laws, and recommended frameworks. It's a curated set — not an exhaustive legal database, and
-        not a substitute for legal advice.
+        Compliance Check covers AI-specific laws, regulations, and frameworks worldwide — comprehensive AI laws
+        (US, EU, Asia), sector and privacy rules with binding AI provisions, and the major voluntary AI governance
+        frameworks. It focuses only on AI; it isn't an exhaustive legal database and isn't a substitute for legal
+        advice.
       </p>
       <p className="mt-3 text-sm text-slate-600">
         Answer the questions below — the four marked "required" are enough to see your results. The rest sharpen

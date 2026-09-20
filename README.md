@@ -4,9 +4,30 @@
 `regulatory.mcpartland.ai` subdomain — are unchanged; only the user-facing display name changed.)
 
 Free lead-magnet tool for the Fractional CISO / AI Security Advisor practice.
-Takes 8 questions about an SMB and returns which privacy / cyber / AI regulations
-apply and why. **Client-side only, static bundle, no backend.**
-Target deploy: `tools.mcpartland.ai` (Cloudflare Pages via CNAME).
+Takes 8 questions about an SMB and returns which **AI-specific** laws, regulations,
+and frameworks apply worldwide, and why. **Client-side only, static bundle, no backend.**
+Live at `regulatory.mcpartland.ai` (Cloudflare Pages); linked from the hub at `tools.mcpartland.ai`.
+
+## AI-only scope (dataset v2.0, 2026-09-20)
+
+The dataset was refocused from broad privacy/cyber/AI to **AI-only, worldwide**. It now includes:
+(a) AI-native laws (EU AI Act, Colorado ADMT, Texas TRAIGA, South Korea/Taiwan/Vietnam/Japan, China's
+AI rules, etc.); (b) privacy and sector laws that carry **binding AI-specific provisions** (GDPR Art. 22,
+US state ADM/profiling rules, HIPAA via HTI-1/§1557, PCI DSS via PCI SSC AI guidance); and (c) the major
+**voluntary AI governance frameworks** (NIST AI RMF, ISO 42001/23894, OECD, G7 Hiroshima, UNESCO,
+Singapore). It **excludes** general cyber/privacy rules with no AI-specific provision (17 entries pruned:
+CFAA, NIS2, ISO 27001, SOC 2, CIS, CMMC, breach-notification, etc.) and non-binding national AI strategies.
+
+Taxonomy changed with the refocus:
+- `cat` (region): `us_fed` · `us_state` · `intl` · `fw`
+- `type` (AI domain): `comprehensive` (cross-sector AI law) · `sectoral` · `transparency`
+  (disclosure/labeling/deepfake/chatbot) · `data_adm` (privacy law w/ automated-decision rules) · `framework`
+
+Tranche 1 (done): 20 AI-relevant keepers re-tagged + 17 new worldwide entries = 37 total.
+Tranche 2 (TODO): watch-tier bills not yet added — US federal AI EO / preemption push, UK "Regulating
+for Growth" bill, Brazil PL 2338, India Governance Guidelines, Australia mandatory guardrails, China's
+draft national AI Law, Turkey draft, Switzerland's CoE-implementation draft. (Geography options for
+Australia/Brazil/India/Singapore are intentionally NOT in the form yet — add them with those entries.)
 
 ## Current state (as of 2026-09-13)
 
@@ -188,4 +209,22 @@ verification, or the citation is inherently unstable):
   turns up.
 - **HITRUST, SOC2, PCI_DSS, ISO standards** — these are licensed/paywalled
   frameworks; linked to each standards body's own official overview/catalogue
-  page since no free full-text exists.
+  page since no free full-text exists. (HITRUST/SOC2 were pruned in v2.0.)
+
+### v2.0 worldwide entries — lower-confidence sources to re-verify
+
+- **KR_AI_BASIC** — linked to law.go.kr's English portal root (no stable deep link
+  to the Act's English text); CSET has a full English translation if a direct link is wanted.
+- **VN_AI_LAW** — no clean official English text online yet; linked to Vietnam Law Magazine
+  (government-affiliated) rather than the Vietnamese-only official gazette.
+- **CN_AI** — one grouped entry for four CAC instruments; linked to the CAC homepage
+  (cac.gov.cn) since there's no single combined official page.
+- **UAE_AI** — layered regime (Dubai AI Act + DIFC Reg 10 + federal); linked to
+  digitaldubai.ae as the closest official hub, not a single statute.
+- **NY_RAISE** — bill number (S6953) should be re-confirmed against the enacted chapter.
+- **STATE_CHATBOT** — a grouped entry for a growing cluster; linked to NCSL's AI
+  legislation tracker rather than any one state statute.
+- Official/canonical and high-confidence: EU_AI_ACT (EUR-Lex), TX_TRAIGA (capitol.texas.gov),
+  CA_SB53 / CA_AB2013 (leginfo), JP_AI_ACT (japaneselawtranslation.go.jp), TW_AI_BASIC (moda.gov.tw),
+  COE_AI_CONVENTION (coe.int), OECD_AI (oecd.ai), ISO_23894 (iso.org), UNESCO_AI (unesco.org),
+  G7_HIROSHIMA (ec.europa.eu), SG_MODEL_AI (pdpc.gov.sg).

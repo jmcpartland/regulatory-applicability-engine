@@ -67,10 +67,10 @@ export const TIER_META: Record<Tier, Accent> = {
 export const TIER_ORDER: Tier[] = ['applies', 'pending', 'verify', 'recommend', 'watch', 'baseline']
 
 // Matches the section order in privacy_cyber_laws_reference.jsx: Federal, State, International, AI, Frameworks.
-export const CAT_ORDER: Law['cat'][] = ['federal', 'state', 'intl', 'ai', 'fw']
+export const CAT_ORDER: Law['cat'][] = ['us_fed', 'us_state', 'intl', 'fw']
 
 export const CAT_META: Record<Law['cat'], Accent> = {
-  federal: {
+  us_fed: {
     label: 'US Federal',
     border: 'border-blue-500',
     bg: 'bg-blue-50',
@@ -78,7 +78,7 @@ export const CAT_META: Record<Law['cat'], Accent> = {
     dot: 'bg-blue-500',
     pill: 'bg-blue-100 text-blue-700',
   },
-  state: {
+  us_state: {
     label: 'US State',
     border: 'border-green-600',
     bg: 'bg-green-50',
@@ -93,14 +93,6 @@ export const CAT_META: Record<Law['cat'], Accent> = {
     text: 'text-amber-700',
     dot: 'bg-amber-600',
     pill: 'bg-amber-100 text-amber-700',
-  },
-  ai: {
-    label: 'AI-Specific',
-    border: 'border-violet-600',
-    bg: 'bg-violet-50',
-    text: 'text-violet-700',
-    dot: 'bg-violet-600',
-    pill: 'bg-violet-100 text-violet-700',
   },
   fw: {
     label: 'Framework & Standard',
@@ -133,8 +125,9 @@ export function priBadge(law: Law): { label: string; pill: string } {
 }
 
 export const TYPE_META: Record<Law['type'], { label: string; pill: string }> = {
-  privacy: { label: 'Privacy', pill: 'bg-blue-100 text-blue-700' },
-  cyber: { label: 'Cybersecurity', pill: 'bg-teal-100 text-teal-700' },
-  ai_reg: { label: 'AI', pill: 'bg-violet-100 text-violet-700' },
-  both: { label: 'Multi-domain', pill: 'bg-slate-100 text-slate-600' },
+  comprehensive: { label: 'Cross-sector AI law', pill: 'bg-violet-100 text-violet-700' },
+  sectoral: { label: 'Sector AI rules', pill: 'bg-blue-100 text-blue-700' },
+  transparency: { label: 'Transparency / disclosure', pill: 'bg-cyan-100 text-cyan-700' },
+  data_adm: { label: 'Data & automated decisions', pill: 'bg-indigo-100 text-indigo-700' },
+  framework: { label: 'Framework', pill: 'bg-teal-100 text-teal-700' },
 }

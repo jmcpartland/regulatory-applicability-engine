@@ -10,8 +10,8 @@ export interface TriggerNode {
 export interface Law {
   id: string
   name: string
-  cat: 'federal' | 'state' | 'intl' | 'fw' | 'ai'
-  type: 'privacy' | 'cyber' | 'ai_reg' | 'both'
+  cat: 'us_fed' | 'us_state' | 'intl' | 'fw'
+  type: 'comprehensive' | 'sectoral' | 'transparency' | 'data_adm' | 'framework'
   year: string
   pri: 'critical' | 'important' | 'watch'
   scope: string

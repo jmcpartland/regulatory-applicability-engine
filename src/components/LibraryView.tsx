@@ -15,8 +15,9 @@ export function LibraryView() {
           <h1 className="text-2xl font-bold text-slate-900">Law & framework library</h1>
           <p className="mt-1 text-sm text-slate-600">
             All {laws.length} entries in the dataset, independent of any assessment answers — browse everything the
-            engine knows about. This is a curated set of major U.S. federal and state privacy, cybersecurity, and AI
-            law, key international regulations, and recommended frameworks — not an exhaustive legal database.
+            engine knows about. This is a curated set of AI-specific laws, regulations, and frameworks from around
+            the world — AI-native laws, sector and privacy rules with binding AI provisions, and major voluntary AI
+            frameworks — not an exhaustive legal database.
           </p>
         </div>
       </div>

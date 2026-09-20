@@ -53,7 +53,7 @@
       "order": 2,
       "type": "multi_select",
       "prompt": "Where are your customers, users, or employees located?",
-      "help": "Select all that apply. Privacy and AI laws often reach any business touching residents of a jurisdiction, regardless of where you are based.",
+      "help": "Select all that apply. AI and privacy laws often reach any business touching residents of a jurisdiction, regardless of where you are based.",
       "answers": [
         {
           "id": "us_ca",
@@ -106,6 +106,34 @@
         {
           "id": "canada",
           "label": "Canada"
+        },
+        {
+          "id": "china",
+          "label": "China (mainland)"
+        },
+        {
+          "id": "south_korea",
+          "label": "South Korea"
+        },
+        {
+          "id": "japan",
+          "label": "Japan"
+        },
+        {
+          "id": "taiwan",
+          "label": "Taiwan"
+        },
+        {
+          "id": "vietnam",
+          "label": "Vietnam"
+        },
+        {
+          "id": "uae",
+          "label": "United Arab Emirates"
+        },
+        {
+          "id": "intl_other",
+          "label": "Other countries"
         }
       ],
       "mandatory": true

@@ -1,9 +1,9 @@
 {
   "meta": {
-    "version": "1.0",
-    "generated": "2026-09-11",
-    "entry_count": 59,
-    "description": "Regulatory dataset for the applicability engine. Each entry's `trigger` is evaluated against user answers to assign a tier.",
+    "version": "2.0",
+    "generated": "2026-09-20",
+    "entry_count": 37,
+    "description": "AI-focused regulatory dataset: worldwide laws, regulations, and frameworks that carry binding AI-specific provisions, plus the major voluntary AI governance frameworks. Each entry's `trigger` is evaluated against user answers to assign a tier.",
     "tiers": {
       "baseline": "Applies to essentially every business — surface always.",
       "applies": "Definite match based on answers — in scope now.",
@@ -20,14 +20,28 @@
       "in": "list of answer ids; TRUE if user's answer(s) intersect this list",
       "always": "true — baseline entry, no conditions",
       "tier_if": "overrides default tier when a condition holds (e.g. pending until effective date)"
+    },
+    "scope_note": "AI-only. Includes (a) AI-native laws, (b) privacy/sector laws with binding AI provisions (profiling/ADM, deepfakes, health/payment AI), and (c) major voluntary AI frameworks. Excludes general cybersecurity/privacy rules with no AI-specific provision, and non-binding national AI strategies. Curated, not exhaustive; verify against primary sources.",
+    "categories": {
+      "us_fed": "US Federal",
+      "us_state": "US State",
+      "intl": "International",
+      "fw": "Framework & Standard"
+    },
+    "types": {
+      "comprehensive": "Cross-sector AI law",
+      "sectoral": "AI in a specific sector (employment, health, payments)",
+      "transparency": "Disclosure / labeling / deepfake / chatbot",
+      "data_adm": "Privacy law with automated-decision / profiling rules",
+      "framework": "Voluntary AI governance framework or standard"
     }
   },
   "laws": [
     {
       "id": "HIPAA",
       "name": "Health Insurance Portability & Accountability Act",
-      "cat": "federal",
-      "type": "both",
+      "cat": "us_fed",
+      "type": "sectoral",
       "year": "1996",
       "pri": "critical",
       "scope": "Healthcare providers, health plans, clearinghouses, and all business associates.",
@@ -59,35 +73,10 @@
       "source": "https://www.hhs.gov/hipaa/index.html"
     },
     {
-      "id": "GLBA",
-      "name": "Gramm-Leach-Bliley Act",
-      "cat": "federal",
-      "type": "both",
-      "year": "1999 / 2023",
-      "pri": "critical",
-      "scope": "Banks, mortgage companies, insurers, tax preparers, and financial advisors.",
-      "smb": "Required for any financial services SMB.",
-      "trigger": {
-        "q": "sector",
-        "in": [
-          "finance"
-        ]
-      },
-      "ai": [
-        "2023 Safeguards Rule update puts AI systems processing customer financial data in scope.",
-        "Written security programs must explicitly address AI-related risks to nonpublic personal information.",
-        "Service provider oversight provisions apply to all AI vendors with access to customer data.",
-        "Automated underwriting and credit decision tools must comply with data use and sharing restrictions."
-      ],
-      "enf": "FTC — up to $100K per violation; officers personally liable up to $10K.",
-      "act": "Make sure your GLBA Safeguards Rule risk assessment explicitly covers the AI systems that touch customer financial data.",
-      "source": "https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act"
-    },
-    {
       "id": "COPPA",
       "name": "Children's Online Privacy Protection Act",
-      "cat": "federal",
-      "type": "privacy",
+      "cat": "us_fed",
+      "type": "sectoral",
       "year": "1998",
       "pri": "important",
       "scope": "Services directed at children under 13, or knowingly collecting data from children.",
@@ -109,45 +98,10 @@
       "source": "https://www.ftc.gov/legal-library/browse/rules/childrens-online-privacy-protection-rule-coppa"
     },
     {
-      "id": "FERPA",
-      "name": "Family Educational Rights and Privacy Act",
-      "cat": "federal",
-      "type": "privacy",
-      "year": "1974",
-      "pri": "important",
-      "scope": "Educational institutions receiving federal funding — student education records.",
-      "smb": "Relevant for EdTech SMBs or districts deploying third-party AI tools.",
-      "trigger": {
-        "any": [
-          {
-            "q": "sector",
-            "in": [
-              "education"
-            ]
-          },
-          {
-            "q": "data_types",
-            "in": [
-              "student"
-            ]
-          }
-        ]
-      },
-      "ai": [
-        "AI tutoring, proctoring, and learning analytics touching student records are in scope.",
-        "AI vendor contracts must include FERPA-compliant Data Use Agreements (DUAs).",
-        "Training AI on student records without consent or a valid exception is prohibited.",
-        "Automated academic decisions in admissions, grading, and discipline require disclosure."
-      ],
-      "enf": "Dept. of Education — withdrawal of federal funding.",
-      "act": "Review the Data Use Agreement (DUA) for any AI EdTech vendor before you deploy it — confirm it's FERPA-compliant.",
-      "source": "https://studentprivacy.ed.gov/content/family-educational-rights-and-privacy-act"
-    },
-    {
       "id": "FTC5",
       "name": "FTC Act Section 5 — Unfair or Deceptive Acts",
-      "cat": "federal",
-      "type": "both",
+      "cat": "us_fed",
+      "type": "comprehensive",
       "year": "Ongoing",
       "pri": "critical",
       "scope": "All US businesses — universal catch-all for privacy and AI consumer harms.",
@@ -166,117 +120,10 @@
       "source": "https://www.law.cornell.edu/uscode/text/15/45"
     },
     {
-      "id": "CFAA",
-      "name": "Computer Fraud and Abuse Act",
-      "cat": "federal",
-      "type": "cyber",
-      "year": "1986 / amended",
-      "pri": "important",
-      "scope": "All organizations — the primary federal law on unauthorized computer access and cybercrime.",
-      "smb": "Provides recourse after attacks; creates liability exposure for unauthorized security testing.",
-      "trigger": {
-        "always": true
-      },
-      "ai": [
-        "AI-generated attacks (automated credential stuffing, AI-driven hacking) constitute unauthorized access.",
-        "AI security tools probing systems must be explicitly authorized — unauthorized scanning creates exposure.",
-        "AI-assisted social engineering leading to system access meets the unauthorized-access threshold.",
-        "Employees using AI to exceed authorized access create CFAA liability."
-      ],
-      "enf": "DOJ — criminal penalties up to 10 years; civil damages available to victims.",
-      "act": "Get written authorization on file before running any AI-based security testing against systems you don't own.",
-      "source": "https://www.law.cornell.edu/uscode/text/18/1030"
-    },
-    {
-      "id": "CIRCIA",
-      "name": "Cyber Incident Reporting for Critical Infrastructure Act",
-      "cat": "federal",
-      "type": "cyber",
-      "year": "2022",
-      "pri": "critical",
-      "scope": "Critical infrastructure entities across 16 CISA sectors.",
-      "smb": "Many SMBs qualify without realizing it — check whether your business falls within a critical infrastructure sector.",
-      "trigger": {
-        "any": [
-          {
-            "q": "sector",
-            "in": [
-              "healthcare",
-              "finance",
-              "govcon"
-            ]
-          }
-        ]
-      },
-      "tier_override": "verify",
-      "tier_reason": "Covered-entity thresholds depend on CISA final rulemaking; confirm sector qualification.",
-      "ai": [
-        "AI-facilitated cyberattacks triggering CIRCIA reporting are an emerging category.",
-        "72-hour reporting for covered incidents; 24-hour reporting for ransomware payments.",
-        "CISA final rules will define covered-entity thresholds and reporting specifics.",
-        "Healthcare, financial services, water, and energy SMBs may qualify as covered entities."
-      ],
-      "enf": "CISA — subpoenas and civil penalties; final rulemaking will define enforcement.",
-      "act": "Check whether your business falls within one of CISA's 16 critical infrastructure sectors — if so, start preparing your incident-reporting process now.",
-      "source": "https://www.cisa.gov/topics/cyber-threats-and-advisories/information-sharing/cyber-incident-reporting-critical-infrastructure-act-2022-circia"
-    },
-    {
-      "id": "SEC_CYBER",
-      "name": "SEC Cybersecurity Disclosure Rules",
-      "cat": "federal",
-      "type": "cyber",
-      "year": "2023",
-      "pri": "important",
-      "scope": "SEC-registered public companies and foreign private issuers.",
-      "smb": "Directly relevant if you're a public company; sets board-level governance expectations you'll be measured against.",
-      "trigger": {
-        "q": "public_company",
-        "in": [
-          "public",
-          "both"
-        ]
-      },
-      "ai": [
-        "Material cybersecurity incidents must be disclosed within 4 business days on Form 8-K.",
-        "Annual cybersecurity risk management, strategy, and governance disclosure on Form 10-K.",
-        "Board cyber oversight and management expertise must be disclosed — drives vCISO demand.",
-        "AI-related cybersecurity risks must be disclosed if material — a direct advisory entry point."
-      ],
-      "enf": "SEC — enforcement actions, fines, and restatement exposure for material misstatement.",
-      "act": "Use the SEC's disclosure requirements as your template for board-level cybersecurity governance and reporting.",
-      "source": "https://www.sec.gov/newsroom/press-releases/2023-139"
-    },
-    {
-      "id": "CMMC",
-      "name": "Cybersecurity Maturity Model Certification 2.0",
-      "cat": "federal",
-      "type": "cyber",
-      "year": "2024",
-      "pri": "important",
-      "scope": "DoD contractors and subcontractors handling CUI or Federal Contract Information.",
-      "smb": "Critical for any SMB that is a DoD prime or sub-contractor.",
-      "trigger": {
-        "q": "public_company",
-        "in": [
-          "fed_contract",
-          "both"
-        ]
-      },
-      "ai": [
-        "AI tools processing CUI must meet CMMC requirements at the appropriate tier.",
-        "ML models trained on CUI are in scope — classification and handling requirements apply.",
-        "AI-driven vulnerability scanning in contract environments must produce CMMC-compliant output.",
-        "CMMC 2.0 Level 2 aligns with NIST SP 800-171 — 110 security practices required."
-      ],
-      "enf": "DoD — contract disqualification; false certification triggers treble damages under the False Claims Act.",
-      "act": "If you hold or plan to bid on DoD contracts, determine your required CMMC tier now — certification timelines run long.",
-      "source": "https://www.ecfr.gov/current/title-32/subtitle-A/chapter-I/subchapter-G/part-170"
-    },
-    {
       "id": "CCPA",
       "name": "California Consumer Privacy Act / Privacy Rights Act (CCPA/CPRA)",
-      "cat": "state",
-      "type": "privacy",
+      "cat": "us_state",
+      "type": "data_adm",
       "year": "2020 / 2023",
       "pri": "critical",
       "scope": "Businesses with $25M+ revenue, 100K+ CA consumer records, or 50%+ revenue from data sales — serving CA residents.",
@@ -303,8 +150,8 @@
     {
       "id": "TX_TDPSA",
       "name": "Texas Data Privacy and Security Act",
-      "cat": "state",
-      "type": "privacy",
+      "cat": "us_state",
+      "type": "data_adm",
       "year": "2024",
       "pri": "critical",
       "scope": "Businesses processing TX residents' personal data in a household/individual context. Excludes employee and B2B data. Small businesses (per SBA) largely exempt but still barred from selling sensitive data without consent.",
@@ -343,8 +190,8 @@
     {
       "id": "CO_CPA",
       "name": "Colorado Privacy Act",
-      "cat": "state",
-      "type": "privacy",
+      "cat": "us_state",
+      "type": "data_adm",
       "year": "2023",
       "pri": "important",
       "scope": "Controllers processing 100K+ CO consumers/year, or 25K+ with data-sale revenue.",
@@ -370,8 +217,8 @@
     {
       "id": "CO_ADMT",
       "name": "Colorado AI Act — SB 26-189 (Automated Decision-Making Technology)",
-      "cat": "state",
-      "type": "ai_reg",
+      "cat": "us_state",
+      "type": "comprehensive",
       "year": "2026 (replaces SB 24-205)",
       "pri": "critical",
       "scope": "Developers and deployers of ADMT used in consequential decisions affecting CO residents. Replaces the repealed SB 24-205 with a transparency-focused framework.",
@@ -410,8 +257,8 @@
     {
       "id": "VA_VCDPA",
       "name": "Virginia Consumer Data Protection Act",
-      "cat": "state",
-      "type": "privacy",
+      "cat": "us_state",
+      "type": "data_adm",
       "year": "2023",
       "pri": "important",
       "scope": "Controllers processing 100K+ VA consumers/year, or 25K+ generating 50%+ data-sale revenue.",
@@ -437,8 +284,8 @@
     {
       "id": "OTHER_STATES",
       "name": "Other US State Comprehensive Privacy Laws",
-      "cat": "state",
-      "type": "privacy",
+      "cat": "us_state",
+      "type": "data_adm",
       "year": "2023–2025",
       "pri": "important",
       "scope": "CT, MT, UT, IA, NH, NJ, TN, IN, OR, DE and others — 13+ states in effect by end of 2025.",
@@ -462,97 +309,10 @@
       "source": "https://iapp.org/resources/article/us-state-privacy-legislation-tracker"
     },
     {
-      "id": "BREACH_NOTIF",
-      "name": "US State Breach Notification Laws",
-      "cat": "state",
-      "type": "cyber",
-      "year": "2002–present",
-      "pri": "critical",
-      "scope": "All 50 states, DC, Puerto Rico, and Guam — any business handling residents' personal information.",
-      "smb": "Universal — every SMB has breach notification obligations across some set of states.",
-      "trigger": {
-        "not": {
-          "q": "data_types",
-          "in": [
-            "none_sensitive"
-          ]
-        }
-      },
-      "ai": [
-        "AI systems breached and exposing personal data activate notification requirements.",
-        "AI-mediated breaches (e.g., prompt injection leading to exfiltration) fall under notification.",
-        "Timelines range 30–90 days by state; some require 72-hour notification.",
-        "AG notification required in most states; credit monitoring may be required for financial breaches."
-      ],
-      "enf": "State AGs — fines from $5K to millions depending on state and breach scope.",
-      "act": "Have a breach-notification playbook ready before an incident happens — deadlines vary by state, from 30 days down to 72 hours.",
-      "source": "https://www.ncsl.org/technology-and-communication/security-breach-notification-laws"
-    },
-    {
-      "id": "NY_DFS",
-      "name": "NY DFS Cybersecurity Regulation (23 NYCRR 500)",
-      "cat": "state",
-      "type": "cyber",
-      "year": "2017 / 2023",
-      "pri": "critical",
-      "scope": "Financial services companies licensed or operating in New York.",
-      "smb": "One of the most rigorous state cybersecurity laws — affects any financial SMB with NY operations.",
-      "trigger": {
-        "all": [
-          {
-            "q": "geography",
-            "in": [
-              "us_ny"
-            ]
-          },
-          {
-            "q": "sector",
-            "in": [
-              "finance"
-            ]
-          }
-        ]
-      },
-      "ai": [
-        "2023 amendments added explicit requirements for AI risk assessment within cybersecurity programs.",
-        "Written policies must cover AI tool use and vendor AI risk.",
-        "72-hour breach notification to NY DFS; annual CISO report and CEO certification required.",
-        "Class A companies face stricter requirements; smaller entities have lighter but real obligations."
-      ],
-      "enf": "NY DFS — fines up to $1,000 per violation per day; license revocation for serious failures.",
-      "act": "If you're a financial services firm with NY operations, treat 23 NYCRR 500 as your cybersecurity program baseline, not just a checkbox.",
-      "source": "https://www.dfs.ny.gov/cybersecurity/23-NYCRR-Part-500"
-    },
-    {
-      "id": "NY_SHIELD",
-      "name": "New York SHIELD Act",
-      "cat": "state",
-      "type": "cyber",
-      "year": "2019 / 2020",
-      "pri": "important",
-      "scope": "Any business owning or licensing data of NY residents — regardless of company location.",
-      "smb": "Extraterritorial reach — any business with NY customer data must implement reasonable cybersecurity.",
-      "trigger": {
-        "q": "geography",
-        "in": [
-          "us_ny"
-        ]
-      },
-      "ai": [
-        "Requires reasonable administrative, technical, and physical safeguards — includes AI tool risk management.",
-        "The reasonable-cybersecurity standard means AI tools processing NY resident data must be risk-assessed.",
-        "Expanded private-information definition includes biometric data — direct AI relevance.",
-        "Breach notification triggered by unauthorized access, not just acquisition — lowers the threshold."
-      ],
-      "enf": "NY AG — up to $250K in civil penalties for knowing and reckless violations.",
-      "act": "Run your AI tools through a 'reasonable safeguards' review if you hold any New York resident's data — this law reaches you regardless of where you're based.",
-      "source": "https://www.nysenate.gov/legislation/bills/2019/S5575"
-    },
-    {
       "id": "CT_CTDPA",
       "name": "Connecticut Data Privacy Act (as amended by PA 25-113)",
-      "cat": "state",
-      "type": "privacy",
+      "cat": "us_state",
+      "type": "data_adm",
       "year": "2023 / 2026 amendments",
       "pri": "critical",
       "scope": "Controllers doing business in CT or targeting CT residents. As of July 1, 2026: 35K-consumer threshold (down from 100K), OR any processing of sensitive data, OR any sale of personal data — the last two with no volume threshold.",
@@ -579,8 +339,8 @@
     {
       "id": "IL_HB3773",
       "name": "Illinois HB 3773 — AI in Employment",
-      "cat": "state",
-      "type": "ai_reg",
+      "cat": "us_state",
+      "type": "sectoral",
       "year": "2024 (effective Jan 1, 2026)",
       "pri": "critical",
       "scope": "Employers of any size with employees in Illinois, or hiring in Illinois, using AI in employment decisions. Amends the Illinois Human Rights Act (775 ILCS 5/2-102(L)).",
@@ -615,18 +375,18 @@
     {
       "id": "TN_ELVIS",
       "name": "Tennessee ELVIS Act (Ensuring Likeness Voice and Image Security)",
-      "cat": "state",
-      "type": "ai_reg",
+      "cat": "us_state",
+      "type": "transparency",
       "year": "2024",
       "pri": "important",
       "scope": "Protects any individual's name, photograph, voice, or likeness — including AI-generated voice clones and deepfakes. Amends TN's Personal Rights Protection Act (Tenn. Code Ann. § 47-25-1101 et seq.).",
       "smb": "Relevant to any SMB in music, media, entertainment, or generative AI — and to platforms/tools that distribute or enable synthetic voice/likeness.",
       "trigger": {
-        "any": [
+        "all": [
           {
-            "q": "sector",
+            "q": "geography",
             "in": [
-              "media"
+              "us_tn"
             ]
           },
           {
@@ -652,8 +412,8 @@
     {
       "id": "UT_UAIPA",
       "name": "Utah Artificial Intelligence Policy Act (as amended 2025)",
-      "cat": "state",
-      "type": "ai_reg",
+      "cat": "us_state",
+      "type": "transparency",
       "year": "2024 / 2025 amendments",
       "pri": "watch",
       "scope": "Entities using generative AI to interact with Utah consumers. 2025 amendments (SB 226, SB 332) narrowed the disclosure duty and extended the sunset to July 1, 2027.",
@@ -687,10 +447,202 @@
       "source": "https://le.utah.gov/xcode/Title13/Chapter72/13-72.html"
     },
     {
+      "id": "TX_TRAIGA",
+      "name": "Texas Responsible Artificial Intelligence Governance Act (HB 149)",
+      "cat": "us_state",
+      "type": "comprehensive",
+      "year": "2025 (effective Jan 1, 2026)",
+      "pri": "critical",
+      "scope": "Use and development of AI systems connected to Texas. Amends the Business & Commerce Code with prohibited-use bans, a regulatory sandbox, and an AI Council. Broad, technology-neutral definition of an AI system.",
+      "smb": "Applies to businesses using or developing AI that touches Texas. The core exposure for most SMBs is the prohibited-use bans and the intent-based standard.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_tx"
+            ]
+          },
+          {
+            "not": {
+              "q": "ai_use",
+              "in": [
+                "no_ai"
+              ]
+            }
+          }
+        ]
+      },
+      "ai": [
+        "Bans AI built to manipulate behavior, incite self-harm or crime, or produce unlawful deepfake CSAM.",
+        "Prohibits AI intended to unlawfully discriminate against protected classes.",
+        "Prohibits government social-scoring and certain biometric identification without consent.",
+        "Creates a regulatory sandbox and an AI Council; enforcement is intent-based."
+      ],
+      "enf": "Texas Attorney General — exclusive enforcement, with a cure period; civil penalties per violation (higher for uncurable/continued violations). No private right of action.",
+      "act": "Review your AI uses against TRAIGA's prohibited-use list and document that none are designed for the banned purposes before Jan 1, 2026.",
+      "source": "https://capitol.texas.gov/BillLookup/History.aspx?LegSess=89R&Bill=HB149"
+    },
+    {
+      "id": "CA_SB53",
+      "name": "California Transparency in Frontier AI Act (SB 53 / TFAIA)",
+      "cat": "us_state",
+      "type": "transparency",
+      "year": "2025 (effective Jan 1, 2026)",
+      "pri": "important",
+      "scope": "Large 'frontier' AI developers training models above very high compute thresholds. The first US law addressing catastrophic-risk frontier model safety; obligations fall on the biggest developers, not deployers.",
+      "smb": "Almost no SMB is a covered frontier developer — this applies to the largest AI labs. Included so you can confirm it does NOT apply to you, and understand the frontier-safety baseline.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_ca"
+            ]
+          },
+          {
+            "q": "ai_use",
+            "in": [
+              "llm_training"
+            ]
+          }
+        ]
+      },
+      "tier_override": "watch",
+      "tier_reason": "Only 'large frontier developers' (models trained above ~10^26 FLOPs) are covered — effectively no SMB qualifies; shown for awareness.",
+      "ai": [
+        "Applies only to large frontier developers training above extreme compute thresholds.",
+        "Covered developers must publish a frontier AI safety framework and risk assessments.",
+        "Critical safety incidents must be reported to California's Office of Emergency Services.",
+        "Adds whistleblower protections for frontier-lab employees."
+      ],
+      "enf": "California Attorney General — civil penalties for covered large frontier developers that fail to publish or report as required.",
+      "act": "Unless you train frontier-scale models, this does not apply — confirm you are below the threshold and move on.",
+      "source": "https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB53"
+    },
+    {
+      "id": "CA_AB2013",
+      "name": "California Generative AI Training Data Transparency Act (AB 2013)",
+      "cat": "us_state",
+      "type": "transparency",
+      "year": "2024 (effective Jan 1, 2026)",
+      "pri": "important",
+      "scope": "Developers of generative AI systems made available to Californians. Requires public documentation of the datasets used to train the system.",
+      "smb": "Applies if you develop or substantially modify a generative AI system offered to people in California — not if you only use someone else's AI tool.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_ca"
+            ]
+          },
+          {
+            "q": "ai_use",
+            "in": [
+              "gen_content",
+              "llm_training"
+            ]
+          }
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "Applies to developers/substantial modifiers of generative AI, not to businesses that merely use a third-party tool; confirm which role you play.",
+      "ai": [
+        "Developers must post a public, high-level summary of the datasets used to train the model.",
+        "Documentation must cover data sources, whether data includes personal information, and copyright status.",
+        "Applies to generative AI released or substantially modified for Californians.",
+        "Using a vendor's AI tool without modifying it generally keeps you out of scope."
+      ],
+      "enf": "Enforced under California law; the practical risk is non-compliant public documentation and follow-on unfair-practice exposure.",
+      "act": "If you train or substantially fine-tune a generative model offered in California, prepare the public training-data documentation this law requires.",
+      "source": "https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202320240AB2013"
+    },
+    {
+      "id": "NY_RAISE",
+      "name": "New York RAISE Act (Responsible AI Safety and Education Act)",
+      "cat": "us_state",
+      "type": "comprehensive",
+      "year": "2026 (effective Jan 1, 2027)",
+      "pri": "important",
+      "scope": "Large frontier AI developers operating in or serving New York. Safety, disclosure, and incident-reporting duties focused on catastrophic risk — similar in spirit to California SB 53.",
+      "smb": "Like the California frontier law, this targets the largest developers, not typical deployers or SMBs. Included for awareness and to confirm non-applicability.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_ny"
+            ]
+          },
+          {
+            "q": "ai_use",
+            "in": [
+              "llm_training"
+            ]
+          }
+        ]
+      },
+      "tier_override": "pending",
+      "tier_reason": "Takes effect January 1, 2027 and covers only large frontier developers; not yet in force and not applicable to typical SMBs.",
+      "ai": [
+        "Targets large frontier developers, not deployers or ordinary AI users.",
+        "Requires safety plans, disclosures, and reporting of critical safety incidents.",
+        "Focused on preventing catastrophic-risk scenarios from frontier models.",
+        "Effective January 1, 2027."
+      ],
+      "enf": "New York Attorney General — penalties for covered large developers; details set by the enacted text and any implementing guidance.",
+      "act": "Unless you are a frontier-scale developer, no action — note the 2027 date and confirm you are out of scope.",
+      "source": "https://www.nysenate.gov/legislation/bills/2025/S6953"
+    },
+    {
+      "id": "STATE_CHATBOT",
+      "name": "US State Chatbot & Companion-AI Disclosure Laws",
+      "cat": "us_state",
+      "type": "transparency",
+      "year": "2025–2026",
+      "pri": "important",
+      "scope": "A growing cluster of state laws (California, Utah, and others) requiring that consumers be told when they are interacting with an AI chatbot rather than a human, with extra duties for companion and mental-health bots.",
+      "smb": "Directly relevant if you run any consumer-facing chatbot or virtual assistant. The common thread is a clear 'you're talking to AI' disclosure.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "us_ca",
+              "us_ut",
+              "us_other",
+              "us_tx",
+              "us_co",
+              "us_ny",
+              "us_il"
+            ]
+          },
+          {
+            "q": "ai_use",
+            "in": [
+              "chatbot"
+            ]
+          }
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "The exact disclosure rules vary by state and by bot type (general, companion, mental-health); confirm which states' rules apply to your bot.",
+      "ai": [
+        "Core requirement: clearly disclose to users that they are interacting with AI, not a person.",
+        "Companion and mental-health chatbots face heightened safety and referral duties in some states.",
+        "Disclosure timing (upfront vs. on request) varies by state.",
+        "The number of enacted chatbot-disclosure laws is growing each session."
+      ],
+      "enf": "State attorneys general and consumer-protection regulators — penalties vary by state statute.",
+      "act": "Add a clear 'you're chatting with an AI assistant' disclosure to every consumer-facing bot, and review companion/mental-health rules if your bot fits those categories.",
+      "source": "https://www.ncsl.org/technology-and-communication/artificial-intelligence-2025-legislation"
+    },
+    {
       "id": "GDPR",
       "name": "EU General Data Protection Regulation",
       "cat": "intl",
-      "type": "privacy",
+      "type": "data_adm",
       "year": "2018",
       "pri": "critical",
       "scope": "Any organization offering goods/services to, or monitoring behavior of, EU/EEA data subjects — regardless of company location.",
@@ -716,7 +668,7 @@
       "id": "UK_GDPR",
       "name": "UK GDPR + Data (Use and Access) Act 2025",
       "cat": "intl",
-      "type": "privacy",
+      "type": "data_adm",
       "year": "2021 / 2025",
       "pri": "important",
       "scope": "Organizations processing UK residents' personal data. The Data (Use and Access) Act 2025 rewrote the automated-decision-making rules, diverging from the EU.",
@@ -742,7 +694,7 @@
       "id": "PIPEDA",
       "name": "Canada PIPEDA (+ proposed AIDA / Bill C-27)",
       "cat": "intl",
-      "type": "both",
+      "type": "data_adm",
       "year": "2001 / pending",
       "pri": "watch",
       "scope": "Private-sector organizations collecting, using, or disclosing personal information in commercial activities in Canada.",
@@ -764,59 +716,10 @@
       "source": "https://laws-lois.justice.gc.ca/eng/acts/p-8.6/"
     },
     {
-      "id": "NIS2",
-      "name": "EU NIS2 Directive",
-      "cat": "intl",
-      "type": "cyber",
-      "year": "2024",
-      "pri": "critical",
-      "scope": "Medium and large entities in 18 critical sectors operating in the EU. As a Directive, it is transposed differently by each member state — there is no single EU-wide compliance standard.",
-      "smb": "Medium SMBs (50+ employees or €10M+ revenue) in scope sectors are covered — but compliance depends on which member state's national law applies.",
-      "trigger": {
-        "all": [
-          {
-            "q": "geography",
-            "in": [
-              "eu"
-            ]
-          },
-          {
-            "q": "sector",
-            "in": [
-              "healthcare",
-              "finance",
-              "tech_saas",
-              "govcon"
-            ]
-          },
-          {
-            "not": {
-              "q": "size",
-              "in": [
-                "micro"
-              ]
-            }
-          }
-        ]
-      },
-      "tier_override": "verify",
-      "tier_reason": "NIS2 is transposed per member state with varying scope and penalties; confirm the applicable national law.",
-      "ai": [
-        "AI systems in critical infrastructure and essential services are in scope for NIS2 security requirements.",
-        "Risk management must cover supply-chain security including AI vendors and tool providers.",
-        "Significant incident reporting: 24-hour early warning; 72-hour full report to the national authority.",
-        "Board members are personally liable for NIS2 compliance failures — this raises the stakes at the leadership level.",
-        "As a Directive, obligations vary by member state — no uniform EU-wide compliance."
-      ],
-      "enf": "National authorities — up to €10M or 2% of global turnover for essential entities (varies by member state).",
-      "act": "If you operate in an EU critical-infrastructure sector, find out how the specific member state you operate in transposed NIS2 — there's no single EU-wide standard to comply with.",
-      "source": "https://eur-lex.europa.eu/eli/dir/2022/2555/oj"
-    },
-    {
       "id": "EU_AI_ACT",
       "name": "EU Artificial Intelligence Act",
-      "cat": "ai",
-      "type": "ai_reg",
+      "cat": "intl",
+      "type": "comprehensive",
       "year": "2024 (phased; amended by Digital Omnibus 2026)",
       "pri": "critical",
       "scope": "Providers and deployers of AI systems used in the EU — a risk-tiered framework applicable to any company globally.",
@@ -852,10 +755,273 @@
       "source": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng"
     },
     {
+      "id": "KR_AI_BASIC",
+      "name": "South Korea AI Basic Act (Framework Act on AI Development and Trust)",
+      "cat": "intl",
+      "type": "comprehensive",
+      "year": "2025 (effective Jan 22, 2026)",
+      "pri": "critical",
+      "scope": "Providers and deployers of AI affecting Korean users, including businesses outside Korea. Act No. 20676; a one-year enforcement grace period runs through 2026 before fines are generally applied.",
+      "smb": "Applies extraterritorially to any business offering AI products or services to people in South Korea. Heaviest obligations fall on 'high-impact' AI (healthcare, energy, public services) and generative AI.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "south_korea"
+            ]
+          },
+          {
+            "not": {
+              "q": "ai_use",
+              "in": [
+                "no_ai"
+              ]
+            }
+          }
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "In force since Jan 22, 2026 with a grace period through 2026; confirm whether your use is 'high-impact' or generative (heavier duties) versus general.",
+      "ai": [
+        "High-impact AI in critical sectors must provide risk management, human oversight, and user notice.",
+        "Generative AI outputs must be labeled/disclosed to users.",
+        "Foreign providers over a user threshold must appoint a domestic representative in Korea.",
+        "One-year grace period in 2026 defers most fines except for serious harm."
+      ],
+      "enf": "Ministry of Science and ICT (MSIT) — administrative fines up to KRW 30 million; fact-finding and penalties largely deferred during the 2026 grace period.",
+      "act": "If you serve users in South Korea, map whether your AI is 'high-impact' or generative, and prepare labeling and human-oversight controls before the grace period ends.",
+      "source": "https://www.law.go.kr/LSW/eng/engMain.do"
+    },
+    {
+      "id": "VN_AI_LAW",
+      "name": "Vietnam Law on Artificial Intelligence (Law No. 134/2025/QH15)",
+      "cat": "intl",
+      "type": "comprehensive",
+      "year": "2025 (effective Mar 1, 2026)",
+      "pri": "important",
+      "scope": "Research, development, provision, deployment, and use of AI systems connected to Vietnam. A risk-based framework with high / medium / low tiers and correspondingly stricter controls.",
+      "smb": "One of Southeast Asia's first comprehensive AI laws. Applies to businesses developing or deploying AI in or into Vietnam; obligations scale with the system's risk tier.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "vietnam"
+            ]
+          },
+          {
+            "not": {
+              "q": "ai_use",
+              "in": [
+                "no_ai"
+              ]
+            }
+          }
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "In force since Mar 1, 2026; implementing decrees are still developing and obligations depend on your system's assigned risk tier.",
+      "ai": [
+        "Three-tier risk system (high / medium / low) sets the level of regulatory control.",
+        "High-risk AI faces the strictest development, transparency, and oversight requirements.",
+        "Emphasis on AI infrastructure, data governance, and technological sovereignty.",
+        "Implementing decrees and technical detail are still being issued."
+      ],
+      "enf": "Vietnamese authorities under the AI Law and implementing decrees; specific penalty schedules are being finalized in secondary legislation.",
+      "act": "If you build or deploy AI touching Vietnam, classify your system by risk tier and watch the implementing decrees for concrete obligations.",
+      "source": "https://vietnamlawmagazine.vn/ai-law-lays-legal-framework-for-vietnams-secure-human-centred-digital-future-78824.html"
+    },
+    {
+      "id": "JP_AI_ACT",
+      "name": "Japan AI Promotion Act (Act on Promotion of R&D and Utilization of AI-Related Technologies)",
+      "cat": "intl",
+      "type": "comprehensive",
+      "year": "2025 (in force)",
+      "pri": "watch",
+      "scope": "National framework promoting AI research, development, and use. Innovation-first: it sets principles and government coordination duties but imposes no direct penalties or binding obligations on private business.",
+      "smb": "Largely a promotional and coordination statute, not a compliance burden. Relevant as a signal of Japan's direction; obligations may come later through sector guidance.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "japan"
+            ]
+          },
+          {
+            "not": {
+              "q": "ai_use",
+              "in": [
+                "no_ai"
+              ]
+            }
+          }
+        ]
+      },
+      "tier_override": "watch",
+      "tier_reason": "Promotional framework with no monetary penalties or direct private-sector obligations; monitor for follow-on sector-specific rules.",
+      "ai": [
+        "Treats AI as a strategic national asset and promotes its development and use.",
+        "No monetary penalties and no direct binding duties on private companies.",
+        "Government may issue guidance and coordinate responses to AI-related harms.",
+        "Signals future direction; watch for sector regulators to add concrete rules."
+      ],
+      "enf": "No direct penalties — the Act relies on government guidance, cooperation, and coordination rather than enforcement.",
+      "act": "No immediate action if you operate in Japan; treat this as a signal and watch for sector-specific AI guidance built on top of it.",
+      "source": "https://www.japaneselawtranslation.go.jp/en/laws/view/5066/en"
+    },
+    {
+      "id": "TW_AI_BASIC",
+      "name": "Taiwan AI Basic Act",
+      "cat": "intl",
+      "type": "comprehensive",
+      "year": "2026 (promulgated Jan 14, 2026)",
+      "pri": "watch",
+      "scope": "Sets national AI guiding principles and directs government bodies (Executive Yuan, MODA) to build a risk-classification framework. It does not itself impose obligations on the private sector.",
+      "smb": "No direct compliance duties for businesses yet. It frames Taiwan's approach and mandates future risk rules; the concrete obligations will come from MODA's forthcoming framework.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "taiwan"
+            ]
+          },
+          {
+            "not": {
+              "q": "ai_use",
+              "in": [
+                "no_ai"
+              ]
+            }
+          }
+        ]
+      },
+      "tier_override": "watch",
+      "tier_reason": "The Basic Act sets principles only and imposes no private-sector obligations; watch MODA's risk-classification framework for actual duties.",
+      "ai": [
+        "Codifies seven principles: well-being, human autonomy, privacy, security, transparency, fairness, accountability.",
+        "Directs MODA to develop an internationally aligned AI risk-classification framework.",
+        "Calls for high-risk AI application labeling and data openness with privacy by design.",
+        "No direct obligations on private business in the Basic Act itself."
+      ],
+      "enf": "No direct private-sector penalties in the Basic Act; enforcement will depend on the sector rules and risk framework that follow.",
+      "act": "If you operate in Taiwan, no action yet — watch MODA's risk-classification framework, which will carry the real obligations.",
+      "source": "https://moda.gov.tw/en/major-policies/ai/governance/19248"
+    },
+    {
+      "id": "CN_AI",
+      "name": "China AI Rules (Generative AI, Deep Synthesis, Algorithm Recommendation & Labeling)",
+      "cat": "intl",
+      "type": "transparency",
+      "year": "2022–2025 (in force)",
+      "pri": "critical",
+      "scope": "A cluster of binding CAC rules rather than one AI law: Algorithm Recommendation Provisions (2022), Deep Synthesis Provisions (2023), Generative AI Measures (2023), and AI content-labeling rules (2025).",
+      "smb": "Any business providing generative AI, recommendation, or synthetic-media services to users in mainland China is in scope. Content control, labeling, and security assessments are mandatory.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "china"
+            ]
+          },
+          {
+            "not": {
+              "q": "ai_use",
+              "in": [
+                "no_ai"
+              ]
+            }
+          }
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "Multiple overlapping CAC rules apply depending on service type (recommendation, deep synthesis, generative AI); confirm which rules and filings apply to you.",
+      "ai": [
+        "Generative AI services require security assessments and algorithm filing with the CAC.",
+        "AI-generated and synthetic content must carry explicit and implicit labels (2025 rules).",
+        "Deep synthesis (deepfake) media requires consent, traceability, and labeling.",
+        "Recommendation algorithms must offer transparency and user opt-out controls."
+      ],
+      "enf": "Cyberspace Administration of China (CAC) and related authorities — service suspension, takedowns, fines, and filing/registration requirements.",
+      "act": "If you offer generative, recommendation, or synthetic-media AI in mainland China, budget for CAC algorithm filing, security assessments, and content labeling.",
+      "source": "http://www.cac.gov.cn/"
+    },
+    {
+      "id": "UAE_AI",
+      "name": "UAE AI Regulation (Dubai AI Act + DIFC Regulation 10)",
+      "cat": "intl",
+      "type": "comprehensive",
+      "year": "2026",
+      "pri": "important",
+      "scope": "A layered regime, not one horizontal statute: the Dubai AI Act (effective Mar 2026, ~10-month transition), DIFC Regulation 10 on autonomous/semi-autonomous systems (enforced Jan 2026), plus federal data-protection law and the National AI Strategy.",
+      "smb": "Relevant to businesses operating in Dubai or the DIFC free zone. The Dubai AI Act bans certain uses; DIFC Regulation 10 governs autonomous systems handling personal data.",
+      "trigger": {
+        "all": [
+          {
+            "q": "geography",
+            "in": [
+              "uae"
+            ]
+          },
+          {
+            "not": {
+              "q": "ai_use",
+              "in": [
+                "no_ai"
+              ]
+            }
+          }
+        ]
+      },
+      "tier_override": "verify",
+      "tier_reason": "Obligations depend on where in the UAE you operate (Dubai, DIFC, or federal) and which layered instrument applies; confirm the applicable regime.",
+      "ai": [
+        "Dubai AI Act prohibits social scoring, subliminal manipulation, workplace/education emotion recognition, and AI-only predictive policing.",
+        "DIFC Regulation 10 governs autonomous and semi-autonomous systems processing personal data.",
+        "UAE Central Bank guidance sets responsible-AI expectations for licensed financial institutions.",
+        "No single federal horizontal AI statute — obligations are spread across emirate and free-zone rules."
+      ],
+      "enf": "Dubai and DIFC authorities plus federal regulators — penalties and supervisory measures vary by the specific instrument and free zone.",
+      "act": "If you operate in Dubai or the DIFC, identify which layer applies to you and use the Dubai AI Act's prohibited-use list as a red-line checklist.",
+      "source": "https://www.digitaldubai.ae/"
+    },
+    {
+      "id": "COE_AI_CONVENTION",
+      "name": "Council of Europe Framework Convention on AI (CETS 225)",
+      "cat": "intl",
+      "type": "comprehensive",
+      "year": "2024 (not yet in force)",
+      "pri": "watch",
+      "scope": "The first binding international AI treaty, tying AI to human rights, democracy, and the rule of law. Obligations bind ratifying states, which then implement them in national law — it does not directly regulate businesses.",
+      "smb": "No direct business obligations. It matters as the backbone many countries (EU, UK, and others) will translate into their own enforceable AI laws over the next few years.",
+      "trigger": {
+        "not": {
+          "q": "ai_use",
+          "in": [
+            "no_ai"
+          ]
+        }
+      },
+      "tier_override": "watch",
+      "tier_reason": "A state-level treaty not yet in force (needs 5 ratifications); it shapes future national law rather than binding businesses today.",
+      "ai": [
+        "First legally binding international treaty on AI and human rights.",
+        "Binds ratifying governments, which implement it through national legislation.",
+        "Signed by the EU, UK, US, Canada, Japan, and others; awaiting enough ratifications to enter into force.",
+        "A leading indicator of where signatory countries' AI laws are heading."
+      ],
+      "enf": "No direct enforcement against businesses — obligations run to ratifying states and surface later as national AI laws.",
+      "act": "No action today — track it as a preview of coming national AI rules in the countries where you operate.",
+      "source": "https://www.coe.int/en/web/artificial-intelligence/the-framework-convention-on-artificial-intelligence"
+    },
+    {
       "id": "NIST_AI_RMF",
       "name": "NIST AI Risk Management Framework 1.0",
-      "cat": "ai",
-      "type": "ai_reg",
+      "cat": "fw",
+      "type": "framework",
       "year": "2023",
       "pri": "critical",
       "scope": "Voluntary — all organizations developing, deploying, or using AI. GenAI Profile (2024) covers LLMs.",
@@ -882,72 +1048,39 @@
       "source": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf"
     },
     {
-      "id": "NIST_CSF",
-      "name": "NIST Cybersecurity Framework 2.0",
+      "id": "ISO_42001",
+      "name": "ISO/IEC 42001 — AI Management System",
       "cat": "fw",
-      "type": "cyber",
-      "year": "2024",
-      "pri": "critical",
-      "scope": "Voluntary — all organizations; 2024 update adds the GOVERN function and broadens applicability.",
-      "smb": "The foundational cybersecurity framework for any SMB — a solid place to start a security program.",
+      "type": "framework",
+      "year": "2023",
+      "pri": "important",
+      "scope": "Organizations developing, providing, or using AI — the first international AI management system standard.",
+      "smb": "Emerging market requirement — your enterprise customers will increasingly expect this certification if you're an AI-using vendor.",
       "trigger": {
-        "always": true
+        "not": {
+          "q": "ai_use",
+          "in": [
+            "no_ai"
+          ]
+        }
       },
       "tier_override": "recommend",
-      "tier_reason": "Voluntary framework — recommended baseline for all organizations.",
+      "tier_reason": "Emerging voluntary standard — recommended for AI-using businesses anticipating enterprise requirements.",
       "ai": [
-        "New GOVERN function (2024) explicitly addresses AI and technology risk governance.",
-        "AI system security maps across all six functions: GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND, RECOVER.",
-        "AI vendor risk management addressed under GOVERN and IDENTIFY supply-chain categories.",
-        "CSF 2.0 profiles allow tailoring to AI-specific deployment contexts."
+        "First international standard for organizational AI management systems.",
+        "Covers AI policy, risk assessment, objectives, controls, and performance monitoring.",
+        "Annexes provide implementation guidance for AI use cases and impact assessments.",
+        "Certification track is emerging — likely to follow the ISO 27001 trajectory."
       ],
-      "enf": "Voluntary — referenced in contracts, regulations, litigation, and cyber insurance applications.",
-      "act": "Use NIST CSF 2.0 as your cybersecurity baseline — it now includes a GOVERN function that explicitly covers AI and technology risk.",
-      "source": "https://csrc.nist.gov/pubs/cswp/29/the-nist-cybersecurity-framework-csf-20/final"
-    },
-    {
-      "id": "ISO_27001",
-      "name": "ISO/IEC 27001:2022 — Information Security Management",
-      "cat": "fw",
-      "type": "cyber",
-      "year": "2022",
-      "pri": "critical",
-      "scope": "Organizations of all sizes — the international gold standard for ISMS. The 2013 edition expired October 31, 2025; only the 2022 edition is valid.",
-      "smb": "Increasingly required by enterprise customers in vendor contracts — a major credibility signal.",
-      "trigger": {
-        "any": [
-          {
-            "q": "sector",
-            "in": [
-              "tech_saas"
-            ]
-          },
-          {
-            "q": "processing_context",
-            "in": [
-              "b2b"
-            ]
-          }
-        ]
-      },
-      "tier_override": "recommend",
-      "tier_reason": "Certification is voluntary but market-driven; recommended for enterprise-facing SMBs.",
-      "ai": [
-        "The 2013 edition is obsolete — all certifications must now be to the 2022 edition (2013 expired Oct 31, 2025).",
-        "2022 adds 11 controls (cloud, threat intelligence, data masking) — AI tools fall under cloud and data handling.",
-        "Annex A Control 5.23 covers cloud service security — where most AI tools live.",
-        "AI tool risk assessment fits naturally within the ISO 27001 risk-treatment process.",
-        "ISO 27701 and ISO 42001 are direct extensions — a natural next step once you're certified."
-      ],
-      "enf": "Certification-based — third-party audit; increasingly demanded by enterprise buyers.",
-      "act": "If enterprise customers are asking for ISO 27001, start with the 2022 edition — the 2013 edition expired and no longer counts.",
-      "source": "https://www.iso.org/standard/27001"
+      "enf": "Certification-based — emerging contractual requirement in enterprise and regulated sectors.",
+      "act": "Map your AI practices against ISO 42001 now — it's the first international AI management standard, and enterprise customers will start requiring it.",
+      "source": "https://www.iso.org/standard/42001"
     },
     {
       "id": "PCI_DSS",
       "name": "PCI DSS v4.0 — Payment Card Industry Data Security Standard",
       "cat": "fw",
-      "type": "cyber",
+      "type": "sectoral",
       "year": "2022",
       "pri": "critical",
       "scope": "Any organization that stores, processes, or transmits payment card data — mandatory by contract with card brands.",
@@ -974,153 +1107,14 @@
       "source": "https://www.pcisecuritystandards.org/standards/pci-dss/"
     },
     {
-      "id": "CIS_V8",
-      "name": "CIS Controls v8",
+      "id": "OECD_AI",
+      "name": "OECD AI Principles",
       "cat": "fw",
-      "type": "cyber",
-      "year": "2021",
+      "type": "framework",
+      "year": "2019 (updated 2024)",
       "pri": "important",
-      "scope": "Voluntary — all organizations; 18 controls with Implementation Groups (IG1–IG3) for right-sizing.",
-      "smb": "IG1 (56 safeguards) is designed for resource-constrained SMBs — a practical starting point.",
-      "trigger": {
-        "always": true
-      },
-      "tier_override": "recommend",
-      "tier_reason": "Voluntary framework — recommended SMB on-ramp.",
-      "ai": [
-        "Control 2 (Software Asset Management) now covers SaaS and cloud-hosted AI tools.",
-        "Control 3 (Data Protection) applies to data processed by AI systems including training data.",
-        "Control 12 (Network Infrastructure) covers network paths that AI tools traverse.",
-        "IG1's 56 safeguards are a defensible baseline before AI risk layering."
-      ],
-      "enf": "Voluntary — widely used as a litigation-defensibility benchmark.",
-      "act": "If you're resource-constrained, start with CIS Controls Implementation Group 1 (56 safeguards) as your baseline before adding AI-specific controls.",
-      "source": "https://www.cisecurity.org/controls/v8"
-    },
-    {
-      "id": "HITRUST",
-      "name": "HITRUST Common Security Framework",
-      "cat": "fw",
-      "type": "cyber",
-      "year": "Ongoing",
-      "pri": "important",
-      "scope": "Healthcare organizations and their business associates — the healthcare industry's dominant certifiable framework.",
-      "smb": "Required or strongly preferred by health-system enterprise buyers selecting SMB vendors.",
-      "trigger": {
-        "any": [
-          {
-            "q": "sector",
-            "in": [
-              "healthcare"
-            ]
-          },
-          {
-            "q": "data_types",
-            "in": [
-              "health_phi"
-            ]
-          }
-        ]
-      },
-      "tier_override": "recommend",
-      "tier_reason": "Certification is market-driven; recommended for healthcare SMBs seeking enterprise contracts.",
-      "ai": [
-        "AI tools processing PHI in healthcare need to be scoped into HITRUST assessments.",
-        "MyCSF platform includes AI-specific control domains in recent versions.",
-        "HITRUST certification opens doors to enterprise health-system contracts.",
-        "Maps to HIPAA, NIST CSF, and ISO 27001 simultaneously — reduces duplicative work."
-      ],
-      "enf": "Certification-based — market-driven requirement from healthcare enterprise buyers.",
-      "act": "If you're selling into health systems, HITRUST certification is often the deciding factor in vendor selection — budget for it early.",
-      "source": "https://hitrustalliance.net/hitrust-framework"
-    },
-    {
-      "id": "NIST_PRIVACY",
-      "name": "NIST Privacy Framework v1.0",
-      "cat": "fw",
-      "type": "privacy",
-      "year": "2020",
-      "pri": "critical",
-      "scope": "Voluntary — all organizations managing privacy risk in products and services.",
-      "smb": "Foundation for any SMB privacy program; pairs naturally with the NIST AI RMF for a complete picture.",
-      "trigger": {
-        "not": {
-          "q": "data_types",
-          "in": [
-            "none_sensitive"
-          ]
-        }
-      },
-      "tier_override": "recommend",
-      "tier_reason": "Voluntary framework — recommended for any business handling personal data.",
-      "ai": [
-        "Five functions: IDENTIFY-P, GOVERN-P, CONTROL-P, COMMUNICATE-P, PROTECT-P.",
-        "Designed to integrate with NIST CSF and AI RMF — a unified three-framework ecosystem.",
-        "Data-processing ecosystem mapping applies directly to AI vendor supply chains.",
-        "Addresses problematic data actions: correlation, aggregation, and re-identification in AI systems."
-      ],
-      "enf": "Voluntary — no penalties; positions you ahead of upcoming regulatory requirements.",
-      "act": "Pair the NIST Privacy Framework with the AI RMF — together they cover both your privacy program and your AI risk management.",
-      "source": "https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.01162020.pdf"
-    },
-    {
-      "id": "ISO_27701",
-      "name": "ISO/IEC 27701 — Privacy Information Management",
-      "cat": "fw",
-      "type": "privacy",
-      "year": "2019",
-      "pri": "important",
-      "scope": "Extension to ISO 27001/27002 — adds privacy management requirements for PII controllers and processors.",
-      "smb": "High value if you're pursuing ISO 27001 — this is the privacy extension enterprise buyers increasingly expect alongside it.",
-      "trigger": {
-        "all": [
-          {
-            "any": [
-              {
-                "q": "sector",
-                "in": [
-                  "tech_saas"
-                ]
-              },
-              {
-                "q": "processing_context",
-                "in": [
-                  "b2b"
-                ]
-              }
-            ]
-          },
-          {
-            "not": {
-              "q": "data_types",
-              "in": [
-                "none_sensitive"
-              ]
-            }
-          }
-        ]
-      },
-      "tier_override": "recommend",
-      "tier_reason": "Certification is market-driven; recommended as an add-on to ISO 27001 work.",
-      "ai": [
-        "PII controller/processor roles map directly to AI vendor relationship structures.",
-        "Data-processing inventory requirements capture AI training and inference data flows.",
-        "Privacy by design and by default must be embedded into AI system design.",
-        "Third-party risk management extends explicitly to AI vendors and sub-processors."
-      ],
-      "enf": "Certification-based — increasingly required in enterprise vendor contracts.",
-      "act": "If you're pursuing ISO 27001, add ISO 27701 at the same time — it's the privacy extension enterprise customers increasingly expect alongside it.",
-      "source": "https://www.iso.org/standard/27701"
-    },
-    {
-      "id": "ISO_42001",
-      "name": "ISO/IEC 42001 — AI Management System",
-      "cat": "fw",
-      "type": "ai_reg",
-      "year": "2023",
-      "pri": "important",
-      "scope": "Organizations developing, providing, or using AI — the first international AI management system standard.",
-      "smb": "Emerging market requirement — your enterprise customers will increasingly expect this certification if you're an AI-using vendor.",
+      "scope": "The first intergovernmental AI standard and the de facto global baseline — adopted by 47+ countries and referenced in the EU AI Act and US policy. Voluntary values-based principles for trustworthy AI.",
+      "smb": "A good, universally recognized starting point for an AI governance policy. Not enforceable itself, but aligning to it signals credibility and eases mapping to binding laws later.",
       "trigger": {
         "not": {
           "q": "ai_use",
@@ -1130,53 +1124,132 @@
         }
       },
       "tier_override": "recommend",
-      "tier_reason": "Emerging voluntary standard — recommended for AI-using businesses anticipating enterprise requirements.",
+      "tier_reason": "Voluntary intergovernmental principles — recommended as the common vocabulary underlying most national AI laws and frameworks.",
       "ai": [
-        "First international standard for organizational AI management systems.",
-        "Covers AI policy, risk assessment, objectives, controls, and performance monitoring.",
-        "Annexes provide implementation guidance for AI use cases and impact assessments.",
-        "Certification track is emerging — likely to follow the ISO 27001 trajectory."
+        "Five values-based principles: inclusive growth, human-centered values, transparency, robustness/safety, accountability.",
+        "The de facto global baseline — 47+ adopting countries and referenced in the EU AI Act and US executive policy.",
+        "A shared vocabulary that maps cleanly onto NIST AI RMF and ISO 42001.",
+        "Non-binding, but widely treated as the floor for 'responsible AI.'"
       ],
-      "enf": "Certification-based — emerging contractual requirement in enterprise and regulated sectors.",
-      "act": "Map your AI practices against ISO 42001 now — it's the first international AI management standard, and enterprise customers will start requiring it.",
-      "source": "https://www.iso.org/standard/42001"
+      "enf": "Voluntary — no penalties. Value comes from credibility and from aligning early with the principles national laws are built on.",
+      "act": "Adopt the OECD AI Principles as the stated foundation of your AI policy — it aligns you with the baseline most binding laws share.",
+      "source": "https://oecd.ai/en/ai-principles"
     },
     {
-      "id": "SOC2",
-      "name": "SOC 2 — Trust Services Criteria",
+      "id": "ISO_23894",
+      "name": "ISO/IEC 23894:2023 — AI Risk Management Guidance",
       "cat": "fw",
-      "type": "both",
-      "year": "AICPA / ongoing",
-      "pri": "critical",
-      "scope": "Service organizations storing, processing, or transmitting customer data — a market-driven standard.",
-      "smb": "Enterprise buyers require SOC 2 from SaaS vendors — AI components are now scrutinized in audits.",
+      "type": "framework",
+      "year": "2023",
+      "pri": "important",
+      "scope": "International guidance on managing AI-specific risk, designed to sit alongside ISO 42001 (the certifiable AI management system) and the general ISO 31000 risk approach.",
+      "smb": "The practical 'how to actually run AI risk management' companion to ISO 42001. Useful once you commit to a structured AI governance program.",
       "trigger": {
-        "any": [
-          {
-            "q": "sector",
-            "in": [
-              "tech_saas"
-            ]
-          },
-          {
-            "q": "processing_context",
-            "in": [
-              "b2b"
-            ]
-          }
-        ]
+        "not": {
+          "q": "ai_use",
+          "in": [
+            "no_ai"
+          ]
+        }
       },
       "tier_override": "recommend",
-      "tier_reason": "Market-driven attestation; recommended for SaaS and B2B service providers.",
+      "tier_reason": "Voluntary international guidance — recommended as the operational risk-management companion to ISO 42001.",
       "ai": [
-        "AI systems are now in-scope components for Type II audits and must appear in system descriptions.",
-        "Privacy Trust Services Criteria covers notice, choice, collection, use, retention, and disposal.",
-        "AI vendor management addressed under Common Criteria CC9 for third-party oversight.",
-        "LLM and AI tool use in service delivery introduces new control requirements auditors examine."
+        "Provides structured guidance for identifying, assessing, and treating AI-specific risks.",
+        "Aligns with ISO 31000 risk management and complements the ISO 42001 management system.",
+        "Guidance-only (not certifiable on its own), but concrete and operational.",
+        "Helps translate high-level AI principles into a working risk process."
       ],
-      "enf": "Market-driven — required by enterprise buyers and in vendor contracts.",
-      "act": "Make sure your SOC 2 scope explicitly includes every AI tool in your service delivery path — auditors are scrutinizing this now.",
-      "source": "https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022"
+      "enf": "Voluntary — no penalties; adopted to operationalize AI risk management and support ISO 42001 certification.",
+      "act": "Use ISO 23894 as the working risk-management method inside an ISO 42001 program rather than as a standalone target.",
+      "source": "https://www.iso.org/standard/77304.html"
+    },
+    {
+      "id": "G7_HIROSHIMA",
+      "name": "G7 Hiroshima Process — International Code of Conduct for Advanced AI",
+      "cat": "fw",
+      "type": "framework",
+      "year": "2023",
+      "pri": "watch",
+      "scope": "A voluntary international code of conduct for organizations developing advanced/frontier AI systems, produced by the G7. Aimed at large developers of the most capable models.",
+      "smb": "Most relevant to organizations building advanced foundation models. For typical SMB AI users it is context, not an obligation.",
+      "trigger": {
+        "not": {
+          "q": "ai_use",
+          "in": [
+            "no_ai"
+          ]
+        }
+      },
+      "tier_override": "watch",
+      "tier_reason": "Voluntary and aimed at advanced/frontier AI developers; informational for most SMBs rather than an operational target.",
+      "ai": [
+        "Voluntary code of conduct for developers of advanced/frontier AI systems.",
+        "Covers risk identification, security, transparency reporting, and content authentication.",
+        "Backed by G7 governments as part of the Hiroshima AI Process.",
+        "Feeds into national expectations for how frontier developers behave."
+      ],
+      "enf": "Voluntary — no penalties; influence comes through G7 government expectations and reputational signaling.",
+      "act": "Note it as context for advanced-AI norms; adopt its transparency practices only if you develop frontier-scale models.",
+      "source": "https://digital-strategy.ec.europa.eu/en/library/hiroshima-process-international-code-conduct-advanced-ai-systems"
+    },
+    {
+      "id": "UNESCO_AI",
+      "name": "UNESCO Recommendation on the Ethics of Artificial Intelligence",
+      "cat": "fw",
+      "type": "framework",
+      "year": "2021",
+      "pri": "watch",
+      "scope": "The first global standard on AI ethics, adopted by all UNESCO member states. A values framework that governments use to shape national policy; it does not bind businesses directly.",
+      "smb": "Background context rather than a compliance item. Useful vocabulary for an ethics policy, but not something you 'comply with' as a business.",
+      "trigger": {
+        "not": {
+          "q": "ai_use",
+          "in": [
+            "no_ai"
+          ]
+        }
+      },
+      "tier_override": "watch",
+      "tier_reason": "A member-state ethics recommendation with no direct business obligations; informational and useful as policy vocabulary.",
+      "ai": [
+        "First global AI-ethics standard, adopted by all UNESCO member states.",
+        "Centers human rights, human dignity, environmental sustainability, and oversight.",
+        "Directed at governments to shape national policy, not at companies directly.",
+        "Useful language for an internal AI ethics statement."
+      ],
+      "enf": "No enforcement against businesses — it guides member states' policymaking.",
+      "act": "Draw on it for the ethics language in your AI policy; there is nothing to 'comply' with directly.",
+      "source": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+    },
+    {
+      "id": "SG_MODEL_AI",
+      "name": "Singapore Model AI Governance Framework (incl. Generative & Agentic AI)",
+      "cat": "fw",
+      "type": "framework",
+      "year": "2019 (updated through 2026)",
+      "pri": "important",
+      "scope": "Singapore's voluntary, practical AI governance framework, extended with dedicated guidance for generative AI and (in 2026) agentic AI, plus the AI Verify testing toolkit. Widely used across APAC.",
+      "smb": "One of the most practical, business-ready governance frameworks available — concrete and implementation-oriented. Voluntary, but a strong template even outside Singapore.",
+      "trigger": {
+        "not": {
+          "q": "ai_use",
+          "in": [
+            "no_ai"
+          ]
+        }
+      },
+      "tier_override": "recommend",
+      "tier_reason": "Voluntary but unusually practical and business-ready; recommended as an implementation template, especially for APAC-facing SMBs.",
+      "ai": [
+        "Practical, implementation-focused governance guidance rather than high-level principles.",
+        "Dedicated modules for generative AI and (2026) agentic AI systems.",
+        "Paired with AI Verify, a testing/assurance toolkit for AI systems.",
+        "Voluntary, but widely adopted as a template across Asia-Pacific."
+      ],
+      "enf": "Voluntary — no penalties; adopted for its practicality and as a credibility signal in APAC markets.",
+      "act": "Use Singapore's framework and AI Verify as a ready-made, concrete template when standing up your AI governance program.",
+      "source": "https://www.pdpc.gov.sg/help-and-resources/2020/01/model-ai-governance-framework"
     }
   ]
 }

@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Regression tests for the applicability engine. Run: python3 test_engine.py"""
+"""Regression tests for the AI-only applicability engine. Run: python3 test_engine.py"""
 import sys
 import eval as E
 
 laws, questions = E.load()
 by_id = {l["id"]: l for l in laws}
+
+ALLOWED_CATS = {"us_fed", "us_state", "intl", "fw"}
+ALLOWED_TYPES = {"comprehensive", "sectoral", "transparency", "data_adm", "framework"}
+PRUNED = {"CFAA", "CIRCIA", "SEC_CYBER", "CMMC", "GLBA", "FERPA", "BREACH_NOTIF",
+          "NY_DFS", "NY_SHIELD", "NIS2", "NIST_CSF", "ISO_27001", "CIS_V8",
+          "HITRUST", "NIST_PRIVACY", "ISO_27701", "SOC2"}
 
 
 def tier(law_id, answers):
@@ -13,6 +19,10 @@ def tier(law_id, answers):
 
 def surfaced(answers):
     return E.evaluate(laws, answers, questions)
+
+
+def flat(answers):
+    return {i for ids in surfaced(answers).values() for i in ids}
 
 
 TESTS = []
@@ -25,7 +35,7 @@ def test(name):
     return deco
 
 
-# ─── Correction regressions ─────────────────────────────────────────────────
+# ─── Kept-entry regressions ─────────────────────────────────────────────────
 @test("CO SB26-189 is pending (2027), never 'applies'")
 def _():
     a = {"geography": ["us_co"], "ai_use": ["hiring"], "sector": "other",
@@ -50,8 +60,7 @@ def _():
 
 @test("EU AI Act applies with AI, absent without")
 def _():
-    base = {"geography": ["eu"], "sector": "tech_saas",
-            "data_types": ["consumer_pii"]}
+    base = {"geography": ["eu"], "sector": "tech_saas", "data_types": ["consumer_pii"]}
     assert tier("EU_AI_ACT", {**base, "ai_use": ["profiling"]}) == "applies"
     assert tier("EU_AI_ACT", {**base, "ai_use": ["no_ai"]}) == "none"
 
@@ -59,11 +68,11 @@ def _():
 def _():
     assert "AMG" in by_id["FTC5"]["enf"]
 
-@test("NIS2 is verify (member-state transposition), not a flat applies")
+@test("FTC5 is a baseline law surfaced for every business")
 def _():
-    a = {"geography": ["eu"], "sector": "finance", "size": "mid",
-         "data_types": ["financial"], "ai_use": ["no_ai"]}
-    assert tier("NIS2", a) == "verify"
+    a = {"sector": "other", "geography": ["us_other"],
+         "data_types": ["none_sensitive"], "ai_use": ["chatbot"]}
+    assert tier("FTC5", a) == "baseline"
 
 @test("UK entry reflects DUAA 2025 (permission-first)")
 def _():
@@ -74,11 +83,6 @@ def _():
     assert by_id["UT_UAIPA"]["pri"] == "watch"
     assert "narrowed" in by_id["UT_UAIPA"]["ai"][0].lower()
 
-@test("ISO 27001 entry is the 2022 edition")
-def _():
-    assert "2022" in by_id["ISO_27001"]["name"]
-
-# ─── New-entry regressions ──────────────────────────────────────────────────
 @test("Illinois HB3773 applies for IL + AI hiring")
 def _():
     a = {"geography": ["us_il"], "ai_use": ["hiring"], "sector": "other",
@@ -97,38 +101,80 @@ def _():
          "data_types": ["consumer_pii"]}
     assert tier("CT_CTDPA", a) == "verify"
 
+@test("TN ELVIS is geography-gated — does not fire for a non-Tennessee business")
+def _():
+    a = {"geography": ["south_korea", "eu"], "ai_use": ["gen_content"],
+         "sector": "media", "data_types": ["consumer_pii"]}
+    assert tier("TN_ELVIS", a) == "none"
+
+
+# ─── AI-only scope: pruned non-AI entries are gone ──────────────────────────
+@test("Non-AI cyber/privacy entries were pruned from the dataset")
+def _():
+    for pid in PRUNED:
+        assert pid not in by_id, f"{pid} should have been pruned in the AI-only rebuild"
+
+
+# ─── New worldwide AI entries ───────────────────────────────────────────────
+@test("Texas TRAIGA applies for TX + any AI use")
+def _():
+    a = {"geography": ["us_tx"], "ai_use": ["chatbot"], "sector": "other",
+         "data_types": ["consumer_pii"]}
+    assert tier("TX_TRAIGA", a) == "applies"
+
+@test("South Korea AI Basic Act flags verify for KR + AI")
+def _():
+    a = {"geography": ["south_korea"], "ai_use": ["gen_content"], "sector": "tech_saas",
+         "data_types": ["consumer_pii"]}
+    assert tier("KR_AI_BASIC", a) == "verify"
+
+@test("China AI rules flag verify for China + AI, absent without AI")
+def _():
+    base = {"geography": ["china"], "sector": "tech_saas", "data_types": ["consumer_pii"]}
+    assert tier("CN_AI", {**base, "ai_use": ["gen_content"]}) == "verify"
+    assert tier("CN_AI", {**base, "ai_use": ["no_ai"]}) == "none"
+
+@test("California SB 53 is frontier-only: watch with model training, else none")
+def _():
+    base = {"geography": ["us_ca"], "sector": "tech_saas", "data_types": ["consumer_pii"]}
+    assert tier("CA_SB53", {**base, "ai_use": ["llm_training"]}) == "watch"
+    assert tier("CA_SB53", {**base, "ai_use": ["chatbot"]}) == "none"
+
+@test("OECD AI Principles are a recommended framework for AI users")
+def _():
+    a = {"geography": ["us_other"], "ai_use": ["chatbot"], "sector": "other",
+         "data_types": ["consumer_pii"]}
+    assert tier("OECD_AI", a) == "recommend"
+
+
 # ─── Mandatory / default logic ──────────────────────────────────────────────
-@test("Optional questions skipped -> defaults applied, no verify-flood")
+@test("PCI DSS stays out when payment default (no) applies")
 def _():
     a = {"sector": "retail", "geography": ["us_ca"],
          "data_types": ["consumer_pii"], "ai_use": ["chatbot"]}
-    g = surfaced(a)
-    # PCI/SEC/CMMC must NOT appear (optional defaults keep them out)
-    flat = {i for ids in g.values() for i in ids}
-    assert "PCI_DSS" not in flat, "PCI should be absent with payment_cards default=no"
-    assert "SEC_CYBER" not in flat, "SEC absent with public_company default=neither"
-    assert "CMMC" not in flat, "CMMC absent with public_company default=neither"
+    assert "PCI_DSS" not in flat(a)
 
-@test("Baseline laws surface for everyone")
+@test("No-AI business: AI laws and frameworks drop out")
 def _():
-    a = {"sector": "other", "geography": ["us_other"],
-         "data_types": ["none_sensitive"], "ai_use": ["no_ai"]}
-    flat = {i for ids in surfaced(a).values() for i in ids}
-    assert "FTC5" in flat and "CFAA" in flat
-
-@test("No-AI business: AI frameworks and AI laws drop out")
-def _():
-    a = {"sector": "other", "geography": ["us_other"],
+    a = {"sector": "other", "geography": ["us_other", "us_tx", "eu", "china"],
          "data_types": ["consumer_pii"], "ai_use": ["no_ai"]}
-    flat = {i for ids in surfaced(a).values() for i in ids}
-    for aid in ("NIST_AI_RMF", "ISO_42001", "EU_AI_ACT", "CO_ADMT", "IL_HB3773"):
-        assert aid not in flat, f"{aid} should not surface for a no-AI business"
+    f = flat(a)
+    for aid in ("NIST_AI_RMF", "ISO_42001", "OECD_AI", "SG_MODEL_AI", "EU_AI_ACT",
+                "TX_TRAIGA", "CN_AI", "CO_ADMT"):
+        assert aid not in f, f"{aid} should not surface for a no-AI business"
+
 
 # ─── Data integrity ─────────────────────────────────────────────────────────
 @test("Every law has a source URL")
 def _():
     for l in laws:
-        assert l.get("source", "").startswith("http"), f"{l['id']} is missing a valid source URL"
+        assert l.get("source", "").startswith("http"), f"{l['id']} is missing a source URL"
+
+@test("Every law uses a valid category and type")
+def _():
+    for l in laws:
+        assert l["cat"] in ALLOWED_CATS, f"{l['id']} has bad cat {l['cat']}"
+        assert l["type"] in ALLOWED_TYPES, f"{l['id']} has bad type {l['type']}"
 
 
 def main():
