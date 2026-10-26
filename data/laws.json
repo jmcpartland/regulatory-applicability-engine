@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "2.0",
-    "generated": "2026-09-20",
+    "generated": "2026-10-26",
     "entry_count": 37,
     "description": "AI-focused regulatory dataset: worldwide laws, regulations, and frameworks that carry binding AI-specific provisions, plus the major voluntary AI governance frameworks. Each entry's `trigger` is evaluated against user answers to assign a tier.",
     "tiers": {
@@ -480,7 +480,7 @@
         "Creates a regulatory sandbox and an AI Council; enforcement is intent-based."
       ],
       "enf": "Texas Attorney General — exclusive enforcement, with a cure period; civil penalties per violation (higher for uncurable/continued violations). No private right of action.",
-      "act": "Review your AI uses against TRAIGA's prohibited-use list and document that none are designed for the banned purposes before Jan 1, 2026.",
+      "act": "Review your AI uses against TRAIGA's prohibited-use list and confirm none are designed for the banned purposes — the law took effect Jan 1, 2026 and is enforceable now.",
       "source": "https://capitol.texas.gov/BillLookup/History.aspx?LegSess=89R&Bill=HB149"
     },
     {
